@@ -1,6 +1,7 @@
 ---
 title: Categories
 layout: page
+comments: no
 ---
 
 <div id='tag_cloud'>
