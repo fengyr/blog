@@ -17,18 +17,16 @@ tags:
 
 大多数Blog作者，都停留在第一和第二阶段，因为第三阶段不太容易到达：你很难找到俯首听命、愿意为你管理服务器的人。
 
-<br>
 示例博客
 
-		https://github.com/jekyll/jekyll/wiki/Sites
-		https://github.com/kejinlu/kejinlu.github.com
-		git clone https://github.com/kejinlu/kejinlu.github.com.git
-		http://geeklu.com/
+	https://github.com/jekyll/jekyll/wiki/Sites
+	https://github.com/kejinlu/kejinlu.github.com
+	git clone https://github.com/kejinlu/kejinlu.github.com.git
+	http://geeklu.com/
 
-<br>
 参考网址
 
-		http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html
+	http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html
 
 <br>
 ###一	Github Pages 是什么？
@@ -44,29 +42,34 @@ Jekyll 是一个静态站点生成器，它会根据网页源码生成静态文�
 
 步骤一：安装ruby环境
 
-		sudo apt-get install ruby ruby-dev
+	sudo apt-get install ruby ruby-dev
 
 步骤二：更换Gem sources
 苦B的天朝码畜们肯定是世界上耐心最好的Coder，各种源都速度奇慢，包括Ruby的Gem sources，好在国内有个不错的加速镜像，taobao的ruby源，
 所以在开始安装前，我们需要替换gem sources为淘宝的镜像
+
 	sudo gem sources --remove https://rubygems.org/
 	sudo gem sources -a http://ruby.taobao.org/
 
 为了确认下替换是否成功，我们可以检查下
+
 	sudo gem sources -l
 
 如果替换成功，则会看到如下返回：
+
 	*** CURRENT SOURCES ***
 
 	http://ruby.taobao.org
 
 步骤三：安装Jekyll
+
 	sudo gem install jekyll
 
 步骤四：启动jekyll服务
+
 	$ jekyll serve
 	Configuration file: /home/peter/develop/github_pages/jekyll_demo2/jekyll_demo/_config.yml
-			    Source: /home/peter/develop/github_pages/jekyll_demo2/jekyll_demo
+				Source: /home/peter/develop/github_pages/jekyll_demo2/jekyll_demo
 		   Destination: /home/peter/develop/github_pages/jekyll_demo2/jekyll_demo/_site
 		  Generating... done.
 		Server address: http://0.0.0.0:4000
@@ -77,7 +80,8 @@ Jekyll 是一个静态站点生成器，它会根据网页源码生成静态文�
 
 ####2	Jekyll基本语法
 参考网址
-http://www.zhanxin.info/jekyll/2013-08-07-jekyll-doc-installation.html
+
+	http://www.zhanxin.info/jekyll/2013-08-07-jekyll-doc-installation.html
 
 
 ####3	Jekyll Bootstrap
@@ -86,7 +90,8 @@ http://www.zhanxin.info/jekyll/2013-08-07-jekyll-doc-installation.html
 
 ###三	Markdown 是什么？
 Markdown 语法说明
-http://wowubuntu.com/markdown/
+
+	http://wowubuntu.com/markdown/
 
 
 ###四	小结
@@ -95,12 +100,14 @@ http://wowubuntu.com/markdown/
 博客使用 git 管理，Markdown用来写博客，写好后提交到github上，github上使用Jekyll把博客生成静态网页，就可以访问了。
 当然，写好的博客在提交前，可以本地通过Jekyll调试，确定有没有语法错误。
 
-这种做法的好处是：、
+这种做法的好处是：
+
 - 免费，无限流量。
 - 享受git的版本管理功能，不用担心文章遗失。
 - 你只要用自己喜欢的编辑器写文章就可以了，其他事情一概不用操心，都由github处理。
 
 它的缺点是：
+
 - 有一定技术门槛，你必须要懂一点git和网页开发。
 - 它生成的是静态网页，添加动态功能必须使用外部服务，比如评论功能就只能用disqus。
 - 它不适合大型网站，因为没有用到数据库，每运行一次都必须遍历全部的文本文件，网站越大，生成时间越长。
@@ -113,14 +120,17 @@ http://wowubuntu.com/markdown/
 在搭建之前，你必须已经安装了git，并且有github账户。
 
 ####1	创建项目。
-在你的电脑上，建立一个目录，作为项目的主目录。我们假定，它的名称为jekyll_demo。
+在你的电脑上，建立一个目录，作为项目的主目录。我们假定，它的名称为jekyll_demo
+
 	$ mkdir jekyll_demo
 
 对该目录进行git初始化。
+
 	$ cd jekyll_demo
 	$ git init
 
-然后，创建一个没有父节点的分支gh-pages。因为github规定，只有该分支中的页面，才会生成网页文件。
+然后，创建一个没有父节点的分支gh-pages。因为github规定，只有该分支中的页面，才会生成网页文件
+
 	$ git symbolic-ref HEAD refs/heads/gh-pages
 	$ rm .git/index 
 	$ git clean -fdx 
@@ -138,12 +148,14 @@ http://wowubuntu.com/markdown/
 	baseurl: /jekyll_demo
 
 目录结构变成：
+
 	/jekyll_demo
 		|--　_config.yml
 
 
 ####3	创建模板文件。
 在项目根目录下，创建一个_layouts目录，用于存放模板文件。
+
 	$ mkdir _layouts
 
 进入该目录，创建一个default.html文件，作为Blog的默认模板。并在该文件中填入以下内容。
@@ -171,6 +183,7 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 
 ####4	创建文章。
 回到项目根目录，创建一个_posts目录，用于存放blog文章。
+
 	$ mkdir _posts
 
 进入该目录，创建第一篇文章。文章就是普通的文本文件，文件名假定为2012-08-25-hello-world.html。(注意，文件名必须为"年-月-日-文章标题.
@@ -208,6 +221,7 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 有了文章以后，还需要有一个首页
 回到根目录，创建一个index.html文件，填入以下内容。
 
+{% raw %}
 	---
 	layout: default
 	title: 我的Blog
@@ -219,6 +233,7 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 		<li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
 		{% endfor %}
 	</ul>
+{% endraw %}
 
 它的Yaml文件头表示，首页使用default模板，标题为"我的Blog"。然后，首页使用了{% raw %}{% for post in site.posts %}{% endraw %}
 表示对所有帖子进行一个遍历。这里要注意的是，Liquid模板语言规定，输出内容使用两层大括号，单纯的命令使用一层大括号。
@@ -237,11 +252,13 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 
 ####6	发布内容。
 现在，这个简单的Blog就可以发布了。先把所有内容加入本地git库。
+
 	$ git add .
 	$ git commit -m "first post"
 
 然后，前往github的网站，在网站上创建一个名为jekyll_demo的库。接着，再将本地内容推送到github上你刚创建的库。
 注意，下面命令中的username，要替换成你的username。
+
 	$ git remote add origin https://github.com/username/jekyll_demo.git
 	$ git push origin gh-pages
 
