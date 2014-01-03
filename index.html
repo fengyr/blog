@@ -46,7 +46,7 @@ layout: page
   {% if paginator.next_page %}
     <a class="next" href="/page{{paginator.next_page}}">后页></a>
   {% else %}
-    <span class="next disabled" >后页{{ site.url }}{{ post.url }}></span>
+    <span class="next disabled" >后页={{ site.url }}={{ post.url }}=></span>
   {% endif %}
   (共{{ paginator.total_posts }}篇)
 </div>
