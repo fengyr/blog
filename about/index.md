@@ -1,7 +1,7 @@
 ---
 title: About me
 layout: page
-comments: no
+comments: yes
 ---
   
 钟国敏，主要在Linux下做Android开发	
