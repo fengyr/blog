@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 留言
-comments: yes
+comments: no
 ---
 
 使用评论留言哦！
