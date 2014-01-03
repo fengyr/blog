@@ -44,9 +44,7 @@ Jekyll 是一个静态站点生成器，它会根据网页源码生成静态文�
 
 	sudo apt-get install ruby ruby-dev
 
-步骤二：更换Gem sources
-苦B的天朝码畜们肯定是世界上耐心最好的Coder，各种源都速度奇慢，包括Ruby的Gem sources，好在国内有个不错的加速镜像，taobao的ruby源，
-所以在开始安装前，我们需要替换gem sources为淘宝的镜像
+步骤二：更换Gem sources	
 
 	sudo gem sources --remove https://rubygems.org/
 	sudo gem sources -a http://ruby.taobao.org/
@@ -101,13 +99,11 @@ Markdown 语法说明
 当然，写好的博客在提交前，可以本地通过Jekyll调试，确定有没有语法错误。
 
 这种做法的好处是：
-
 - 免费，无限流量。
 - 享受git的版本管理功能，不用担心文章遗失。
 - 你只要用自己喜欢的编辑器写文章就可以了，其他事情一概不用操心，都由github处理。
 
 它的缺点是：
-
 - 有一定技术门槛，你必须要懂一点git和网页开发。
 - 它生成的是静态网页，添加动态功能必须使用外部服务，比如评论功能就只能用disqus。
 - 它不适合大型网站，因为没有用到数据库，每运行一次都必须遍历全部的文本文件，网站越大，生成时间越长。
@@ -164,16 +160,16 @@ Markdown 语法说明
 	<html>
 		<head>
 			<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-			<title>{{ page.title }}</title>
+			<title>{% raw %}{{ page.title }}{% endraw %}</title>
 		</head>
 		<body>
 
-			{{ content }}
+			{% raw %}{{ content }}{% endraw %}
 
 		</body>
 	</html>
 
-Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content }}表示文章内容，更多模板变量请参考官方文档。
+Jekyll使用Liquid模板语言，{% raw %}{{ page.title }}{% endraw %}表示文章标题，{% raw %}{{ content }}{% endraw %}表示文章内容，更多模板变量请参考官方文档。
 目录结构变成：
 
 	/jekyll_demo
@@ -191,6 +187,7 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 
 在该文件中，填入以下内容：（注意，行首不能有空格）
 
+{% raw %}
 	---
 	layout: default
 	title: 你好，世界
@@ -198,14 +195,15 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 	<h2>{{ page.title }}</h2>
 	<p>我的第一篇文章</p>
 	<p>{{ page.date | date_to_string }}</p>
+{% endraw %}
 
 每篇文章的头部，必须有一个yaml文件头，用来设置一些元数据。它用三根短划线"---"，标记开始和结束，里面每一行设置一种元数据。
 "layout:default"，表示该文章的模板使用_layouts目录下的default.html文件；
 "title: 你好，世界"，表示该文章的标题是"你好，世界"，
 如果不设置这个值，默认使用嵌入文件名的标题，即"hello world"。
 
-在yaml文件头后面，就是文章的正式内容，里面可以使用模板变量。{{ page.title }}就是文件头中设置的"你好，世界"，
-{{ page.date }}则是嵌入文件名的日期（也可以在文件头重新定义date变量），"| date_to_string"表示将page.date变量转化成人类可读的格式。
+在yaml文件头后面，就是文章的正式内容，里面可以使用模板变量。{% raw %}{{ page.title }}{% endraw %}就是文件头中设置的"你好，世界"，
+{% raw %}{{ page.date }}{% endraw %}则是嵌入文件名的日期（也可以在文件头重新定义date变量），"| date_to_string"表示将page.date变量转化成人类可读的格式。
 
 目录结构变成：
 
@@ -265,7 +263,7 @@ Jekyll使用Liquid模板语言，{{ page.title }}表示文章标题，{{ content
 上传成功之后，等10分钟左右，访问http://username.github.com/jekyll_demo/就可以看到Blog已经生成了（将username换成你的用户名）。
 
 	
-####7	<p>绑定域名。需要自己购买域名，然后绑定到gitbhub上，
+####7	绑定域名。需要自己购买域名，然后绑定到gitbhub上，
 目前没有买域名，不处理。
 
 如果你不想用http://username.github.com/jekyll_demo/这个域名，可以换成自己的域名。
