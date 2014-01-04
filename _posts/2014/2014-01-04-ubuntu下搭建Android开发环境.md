@@ -15,11 +15,11 @@ tags:
 在这里，整理下主要的步骤
 
 ###1	安装JDK
-下载JDK安装包，解压
+下载JDK安装包，解压  
 下载地址
 
 	http://www.oracle.com/technetwork/cn/java/javase/downloads/jdk7-downloads-1880260-zhs.html
-配置环境变量
+配置环境变量  
 验证安装
 
 	java -version
@@ -32,18 +32,18 @@ tags:
 
 
 ###3	下载Android SDK
-下载后解压
-eclispe中设置android sdk 路径
+下载后解压  
+eclispe中设置android sdk 路径  
 设置好后，打开Android SDK Manager，选择下载tools和需要的android版本
 
 这样下载 android sdk那是相当的慢啊！
 
 两种解决办法
 
-- 1 下载多合一安装包
+- 1 下载多合一安装包  
 下载文件与地址
 
-	adt-bundle-linux-x86_64-20131030.zip
+	adt-bundle-linux-x86_64-20131030.zip  
 	http://developer.android.com/sdk/index.html
 
 看下关于adt-bundle说明
@@ -63,13 +63,13 @@ eclispe中设置android sdk 路径
 
 看到目录，应该知道怎么回事了。
 
-- 2 分步下载开发包
+- 2 分步下载开发包  
 参考文章 
 
-	Android SDK开发包国内下载地址
+	Android SDK开发包国内下载地址  
 	http://www.cnblogs.com/bjzhanghao/archive/2012/11/14/android-platform-sdk-download-mirror.html
 	
-上面有android开发需要的各种资源包，包括ADT Bundle, Android SDK, ADT, Platforms, Documents, Sources, Samples
+上面有android开发需要的各种资源包，包括ADT Bundle, Android SDK, ADT, Platforms, Documents, Sources, Samples  
 必须下载的资源包有：
 
 	Android SDK(android-sdk_r22.3-linux.tgz platform-tools_r14-linux.zip)
