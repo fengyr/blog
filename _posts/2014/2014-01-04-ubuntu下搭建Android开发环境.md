@@ -15,7 +15,7 @@ tags:
 在这里，整理下主要的步骤
 
 ###1	安装JDK
-下载JDK安装包，解压
+下载JDK安装包，解压	
 下载地址
 
 	http://www.oracle.com/technetwork/cn/java/javase/downloads/jdk7-downloads-1880260-zhs.html
