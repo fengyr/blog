@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 2014-04-19-Android下的VOIP实现
+title: Android下的VOIP实现
 categories:
 - programmer
 tags:
@@ -12,29 +12,29 @@ tags:
 最新要做一个移动端视频通话软件，大致看了下现有的开源软件
 
 ##一) sipdroid
-- 1）架构
+- 1）架构	
 sip协议栈使用JAVA实现，音频Codec使用skype的silk（Silk编解码是Skype向第三方开发人员和硬件制造商提供免版税认证(RF)的Silk宽带音频编码器）实现。
 NAT传输支持stun server.	
 
-- 2）优缺点：
+- 2）优缺点	
 NAT方面只支持STUN，无ICE框架，如需要完全实现P2P视频通话需要实现符合ICE标准的客户端,音频方面没看到AEC等技术，视频方面还不是太完善，
 目前只看到调用的是系统自带的MediaRecorder，并没有自己的第三方音视频编解码库。
 
-- 3）实际测试：
+- 3）实际测试	
 基于sipdroid架构的话，我们要做的工作会比较多，（ICE支持，添加回音消除，NetEQ等gips音频技术，添加视频硬件编解码codec.）,所以就不做测试了。
 
 
 ##二) imsdroid
-- 1)架构：
+- 1)架构	
 基于doubango(Doubango 是一个基于3GPP IMS/RCS 并能用于嵌入式和桌面系统的开源框架。该框架使用ANSCI-C编写，具有很好的可移植性。
 并且已经被设计成非常轻便且能有效的工作在低内存和低处理能力的嵌入式系统上。苹果系统上的idoubs功能就是基于此框架编写) .
 音视频编码格式大部分都支持（H264(video)，VP8(video)，iLBC(audio),PCMA,PCMU,G722,G729）。NAT支持ICE（stun+turn）
 
-- 2）效果实测
+- 2）效果实测	
 测试环境：公司局域网内两台机器互通，服务器走外网sip2sip
 音频质量可以，但是AEC打开了还是有点回音（应该可以修复）。视频马赛克比较严重，延迟1秒左右。
 
-- 3）优缺点
+- 3）优缺点	
 imsdroid目前来说还是算比较全面的，包括音视频编解码，传输（RTSP，ICE），音频处理技术等都有涉猎。doubango使用了webrtc的AEC技术，
 但是其调用webrtc部分没有开源，是用的编译出来的webrtc的库。如果要改善音频的话不太方便，Demo的音频效果可以，视频效果还是不太理想。
 
@@ -42,11 +42,11 @@ imsdroid目前来说还是算比较全面的，包括音视频编解码，传输
 ##三）csipsimple
 - 1）sip协议栈用的是pjsip,音视频编解码用到的第三方库有ffmpeg（video）,silk(audio),webrtc.默认使用了webrtc的回声算法。支持ICE协议。
 
-- 2）优缺点：
+- 2）优缺点	
 csipsimple架构比较清晰，sip协议由C实现，java通过JNI调用，SIP协议这一块会比较高效。其VOIP各个功能也都具备，包括NAT传输，音视频编解码。
 并且该项目跟进新技术比较快，官方活跃程度也比较高。如果做二次开发可以推荐这个。
 
-- 3）实测效果
+- 3）实测效果	
 测试环境：公司局域网内两台机器互通，服务器走外网sip2sip
 音频质量可以，无明显回音，视频需要下插件，马赛克比imsdroid更严重。
 
