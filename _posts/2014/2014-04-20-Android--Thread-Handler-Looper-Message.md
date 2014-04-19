@@ -36,7 +36,7 @@ Message这个类实现了Parcelable接口，所以可以通过Intent或IPC传递
 
 
 通过下图可以清晰显示出UI Thread, Worker Thread, Handler, Massage Queue, Looper之间的关系：
-![Alt text](/media/images/2014/Anddroid--Thread-Handler-Looper-Message_01.png "Anddroid--Thread-Handler-Looper-Message_01.png")
+![Alt text](http://zhongguomin.github.io/blog/media/images/2014/Anddroid--Thread-Handler-Looper-Message_01.png "Anddroid--Thread-Handler-Looper-Message_01.png")
 
 
 
