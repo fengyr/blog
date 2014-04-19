@@ -10,32 +10,33 @@ tags:
 
 ##Thread
 
+
 ##Handler
-	主要处理Message的类，负责将Message添加到消息队列，以及对消息队列中的消息进行处理。一般Handler的实例都是与一个线程和
-	该线程的消息队列一起使用，一旦创建了一个新的Handler实例，系统就把该实例与一个线程和该线程的消息队列捆绑起来，这样就可以
-	发送消息和runnable对象给该消息队列，并在消息队列出口处理它们。
-	两个主要作用：1)安排消息或Runnable在某个线程中某个时间段执行。2)安排一个动作在另外一个线程执行。
+主要处理Message的类，负责将Message添加到消息队列，以及对消息队列中的消息进行处理。一般Handler的实例都是与一个线程和
+该线程的消息队列一起使用，一旦创建了一个新的Handler实例，系统就把该实例与一个线程和该线程的消息队列捆绑起来，这样就可以
+发送消息和runnable对象给该消息队列，并在消息队列出口处理它们。
+两个主要作用：1)安排消息或Runnable在某个线程中某个时间段执行。2)安排一个动作在另外一个线程执行。
 
 
 ##Looper
-	负责管理线程的消息队列和消息循环，具体实现请参考Looper的源码。 
-	`可以通过Loop.myLooper()得到当前线程的Looper对象，
-	通过Loop.getMainLooper()可以获得当前进程的主线程的Looper对象。
+负责管理线程的消息队列和消息循环，具体实现请参考Looper的源码。 
+可以通过Loop.myLooper()得到当前线程的Looper对象，
+通过Loop.getMainLooper()可以获得当前进程的主线程的Looper对象。
 
-	Looper的主要作用就是循环迭代MessageQueue，默认情况下没有跟线程相关联的消息循环，必须在线程中调用prepare()方法，
-	运行循环。但是在我们的Activity的Main()函数中，系统默认调用了
-	所以我们可以通过getMainLooper()获得一个MainLooper。
+Looper的主要作用就是循环迭代MessageQueue，默认情况下没有跟线程相关联的消息循环，必须在线程中调用prepare()方法，
+运行循环。但是在我们的Activity的Main()函数中，系统默认调用了
+所以我们可以通过getMainLooper()获得一个MainLooper。
 
 
 ##Message
-	消息，就是线程间通信的数据单元，里面可以封装各种信息，Android系统中消息是通过Message类来封装的。
-	Message这个类实现了Parcelable接口，所以可以通过Intent或IPC传递。定义了一个能够发送给Handler对象的消息，
-	包含了消息的描述和任意数据对象。主要包含两个int类型字段和一个Object类型字段。我们可以通过Message的构造函数生成一个消息，
-	但是一般是通过调用Message.obtain()方法或Handler.obtainMessage()方法来构造一个消息。
+消息，就是线程间通信的数据单元，里面可以封装各种信息，Android系统中消息是通过Message类来封装的。
+Message这个类实现了Parcelable接口，所以可以通过Intent或IPC传递。定义了一个能够发送给Handler对象的消息，
+包含了消息的描述和任意数据对象。主要包含两个int类型字段和一个Object类型字段。我们可以通过Message的构造函数生成一个消息，
+但是一般是通过调用Message.obtain()方法或Handler.obtainMessage()方法来构造一个消息。
 
 
 通过下图可以清晰显示出UI Thread, Worker Thread, Handler, Massage Queue, Looper之间的关系：
-![Alt text](/media/images/Anddroid--Thread-Handler-Looper-Message_01.png "Anddroid--Thread-Handler-Looper-Message_01.png")
+![Alt text](/media/images/2014/Anddroid--Thread-Handler-Looper-Message_01.png "Anddroid--Thread-Handler-Looper-Message_01.png")
 
 
 
