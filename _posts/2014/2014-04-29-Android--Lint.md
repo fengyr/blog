@@ -8,24 +8,6 @@ tags:
 ---
 
 
-##lint
-
-
-##Syntax
-
-
-##Options
-
-
-##Improving Your Code with lint
-
-
-##Overview
-
-
-##问题描述
-
-
 ##参考资料
 lint	
 http://developer.android.com/tools/help/lint.html
