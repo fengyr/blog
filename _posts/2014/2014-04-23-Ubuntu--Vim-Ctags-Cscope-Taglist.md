@@ -190,7 +190,6 @@ http://www.360doc.com/content/11/0117/15/1921373_87127589.shtml
 
 ##附 Vim 配置文件
 供参考 HOME/.vimrc		
-===== Begin
 
 	" ###################################################################
 	" vimrc 配置
@@ -308,6 +307,5 @@ http://www.360doc.com/content/11/0117/15/1921373_87127589.shtml
 	nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 
-===== End
 
 
