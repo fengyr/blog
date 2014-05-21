@@ -80,13 +80,6 @@ more about lint see at
 
 ##问题描述
 Android-Lint所要检查的问题以Issue来描述。
-Issue分9类（Category）：		
-	Correctness/ Correctness: Messages / Security / Performance / Usability: Typography /Usability: Icons / 
-	Usability / Accessibility / Internationalization。	
-Issue以一个文本短语来作为id，对Issue的定制等操作都是基于id的。		
-Issue以Severity来标识该Issue的危害程度：		
-	Fatal / Error / Warning/ Information / Ignore。		
-对Issue的忽略操作其实也就是降低它的Severity为Ignore。
 
 
 ##参考资料
