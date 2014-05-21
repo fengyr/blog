@@ -55,6 +55,7 @@ No		Description									Start Date		End Date		Level		Status
 		比如，但不限于
 		strace, pstack, pstree, lsof, top, ps
 		lstrace, truss ...
+		jstack
 -------------------------------------------------------------------------------------------------------
 
 
