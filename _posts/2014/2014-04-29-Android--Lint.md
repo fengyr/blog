@@ -52,22 +52,6 @@ Figure 1 shows how the lint tool processes the application source files.
 
 Figure 1. Code scanning workflow with the lint tool
 
-- Application source files
-	The source files consist of files that make up your Android project, including Java and XML files, icons, 
-	and ProGuard configuration files.
-- The lint.xml file
-	A configuration file that you can use to specify any lint checks that you want to exclude and to customize 
-	problem severity levels.
-- The lint tool
-	A static code scanning tool that you can run on your Android project from the command-line or from Eclipse. 
-	The lint tool checks for structural code problems that could affect the quality and performance of your 
-	Android application. 
-	It is strongly recommended that you correct any errors that lint detects before publishing your application.
-- Results of lint checking
-	You can view the results from lint in the console or in the Lint Warnings view in Eclipse. Each issue is 
-	identified by the location 
-	in the source files where it occurred and a description of the issue.
-
 The lint tool is automatically installed as part of the Android SDK Tools revision 16 or higher. If you want to use 
 lint in the Eclipse environment, you must also install the Android Development Tools (ADT) Plugin for Eclipse revision 
 16 or higher. 
