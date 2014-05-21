@@ -75,7 +75,7 @@ For more information about installing the SDK or the ADT Plugin for Eclipse, see
 
 more about lint see at
 
-	http://developer.android.com/tools/debugging/improving-w-lint.html#config
+	http://developer.android.com/tools/debugging/improving-w-lint.html
 
 
 ##Œ Ã‚√Ë ˆ
