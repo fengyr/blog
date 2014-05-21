@@ -18,11 +18,6 @@ tags:
 ##Overview
 
 
-
-##问题描述
-Android-Lint所要检查的问题以Issue来描述。
-
-
 ##参考资料
 lint	
 http://developer.android.com/tools/help/lint.html
