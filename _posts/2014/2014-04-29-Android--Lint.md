@@ -8,16 +8,6 @@ tags:
 ---
 
 
-##lint
-
-
-##Options
-
-
-
-##Overview
-
-
 ##²Î¿¼×ÊÁÏ
 lint	
 http://developer.android.com/tools/help/lint.html
