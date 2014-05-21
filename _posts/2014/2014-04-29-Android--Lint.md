@@ -9,9 +9,6 @@ tags:
 
 
 ##lint
-The Android lint tool is a static code analysis tool that checks your Android project source files for potential bugs 
-and optimization improvements for correctness, security, performance, usability, accessibility, and internationalization.
-
 
 
 ##Options
