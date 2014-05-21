@@ -52,14 +52,6 @@ Figure 1 shows how the lint tool processes the application source files.
 
 Figure 1. Code scanning workflow with the lint tool
 
-The lint tool is automatically installed as part of the Android SDK Tools revision 16 or higher. If you want to use 
-lint in the Eclipse environment, you must also install the Android Development Tools (ADT) Plugin for Eclipse revision 
-16 or higher. 
-For more information about installing the SDK or the ADT Plugin for Eclipse, see Installing the SDK.
-
-more about lint see at
-
-	http://developer.android.com/tools/debugging/improving-w-lint.html
 
 
 ##Œ Ã‚√Ë ˆ
