@@ -15,11 +15,6 @@ and optimization improvements for correctness, security, performance, usability,
 
 
 ##Options
-see at
-
-	http://developer.android.com/tools/help/lint.html
-
-describes the command-line options for lint.
 
 
 ##Improving Your Code with lint
