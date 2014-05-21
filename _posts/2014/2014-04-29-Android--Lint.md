@@ -17,8 +17,6 @@ and optimization improvements for correctness, security, performance, usability,
 ##Options
 
 
-##Improving Your Code with lint
-
 
 ##Overview
 
