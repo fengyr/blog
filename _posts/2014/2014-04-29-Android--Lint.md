@@ -79,29 +79,29 @@ more about lint see at
 
 
 ##问题描述
-Android-Lint所要检查的问题以Issue来描述。
-Issue分9类（Category）：
-    Correctness/ Correctness: Messages / Security / Performance / Usability: Typography /Usability: Icons /
-    Usability / Accessibility / Internationalization。
-Issue以一个文本短语来作为id，对Issue的定制等操作都是基于id的。
-Issue以Severity来标识该Issue的危害程度：
-    Fatal / Error / Warning/ Information / Ignore。
-对Issue的忽略操作其实也就是降低它的Severity为Ignore。
+Android-Lint所要检查的问题以Issue来描述。		
+Issue分9类（Category）：		
+    Correctness/ Correctness: Messages / Security / Performance / Usability: Typography /		
+	Usability: Icons / Usability / Accessibility / Internationalization。		
+Issue以一个文本短语来作为id，对Issue的定制等操作都是基于id的。		
+Issue以Severity来标识该Issue的危害程度：		
+    Fatal / Error / Warning/ Information / Ignore。		
+对Issue的忽略操作其实也就是降低它的Severity为Ignore。		
 
 
 ##参考资料
-lint
+lint		
 http://developer.android.com/tools/help/lint.html
 
-Improving Your Code with lint
+Improving Your Code with lint			
 http://developer.android.com/tools/debugging/improving-w-lint.html#config
 
-Android-Lint：查错与代码优化利器
+Android-Lint：查错与代码优化利器		
 http://blog.csdn.net/thl789/article/details/8037473
 
-定制Android-Lint检查问题的现有规则
+定制Android-Lint检查问题的现有规则		
 http://blog.csdn.net/thl789/article/details/8036066
 
-提高你的代码稳定性与可读性-lint工具
+提高你的代码稳定性与可读性-lint工具		
 http://www.cnblogs.com/wanqieddy/p/3549739.html
 
