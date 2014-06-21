@@ -1,0 +1,139 @@
+Android-4.4 Printing Framework
+
+##	一	Android4.4 Printing Framework Description
+		From http://developer.android.com/about/versions/kitkat.html
+
+	Android应用可以通过WIFI或云主机，实现对多种打印方式的支持。在支持打印的APP中，用户可以发现可用打印机，换打印机纸张大小，
+	选择打印特定页，打印几乎所有种类的文档，图像，或文件。
+
+	Android4.4引导入了对打印机的本地平台支持，以及管理打印机和添加新型号打印机的支持。平台提供了一个打印机管理器，用来和请求
+	的打印机和已安装的打印服务进行交互。打印机管理器提供共享的服务以及一个系统级的打印UI。为所有APP打印功能，提供给了用户一
+	致的控制界面。打印manager同时也保证了进程间传递打印内容的安全性，体现在从app到打印驱动之间
+
+	打印机生产商可能使用新的API来开发他们自己的打印服务程序。可插拔组件，添加了生产商自定义的逻辑和服务，用以和特别的型号和
+	打印机通信。他们可以创建打印服务，通过googleplay分发,这样用户可以很容易就查找和安装打印机服务程序。像其它的app一样，你
+	可以在任何时间更新打印机服务。
+
+	客户app可以使用新的API来添加打印机功能，并且尽量对代码的修改最小。在大多数情况下，你可以添加一个打印action到你的ActionBar
+	以及UI，来选择打印条目。你也可以实现API来创建打印机任务，查询打印服务的状态，取消打印任务。可以让你打印任何种类的内容，
+	从本地图像和文档到网络数据或一个画布的渲染效果图。
+
+	为了最大的兼容性，android使用PDF来作为打印的基本文件格式，在打印之前，你的APP需要根据内容生成一个合适的分页PDF版本。为了
+	便利起见，打印API提供本地和网络视频帮助类，让你可以使用android标准的画图API来生成PDF.如果你的app知道如何来画内容，它会快速
+	生成可打印的PDF。
+
+	很多android4.4上的设备将包括google云打印服务作为预装服务。同时还有一些支持打印的googleapp,包括Chrome浏览器,网盘，照片库
+	和QuickOffice
+
+
+##	
+
+1	列出相关涉及文件
+frameworks/support/v4/kitkat/android/support/v4/print/PrintHelperKitkat.java
+frameworks/support/v4/java/android/support/v4/print/PrintHelper.java
+
+
+frameworks/base/packages/PrintSpooler/src/
+└── com
+	└── android
+		└── printspooler
+		    ├── FusedPrintersProvider.java
+		    ├── MediaSizeUtils.java
+		    ├── NotificationController.java
+		    ├── PrintDialogFrame.java
+		    ├── PrintJobConfigActivity.java
+		    ├── PrintSpoolerService.java
+		    ├── RemotePrintDocumentAdapter.java
+		    ├── SelectPrinterActivity.java
+		    └── SelectPrinterFragment.java
+
+
+frameworks/base/services/java/com/android/server/print/
+├── PrintManagerService.java
+├── RemotePrintService.java
+├── RemotePrintSpooler.java
+└── UserState.java
+
+
+frameworks/base/core/java/android/util/PrintWriterPrinter.java
+frameworks/base/core/java/android/util/Printer.java
+frameworks/base/core/java/android/util/PrintStreamPrinter.java
+
+
+frameworks/base/core/java/android/printservice/
+├── IPrintService.aidl
+├── IPrintServiceClient.aidl
+├── package.html
+├── PrintDocument.java
+├── PrinterDiscoverySession.java
+├── PrintJob.java
+├── PrintServiceInfo.aidl
+├── PrintServiceInfo.java
+└── PrintService.java
+
+
+frameworks/base/core/java/android/print/
+├── ILayoutResultCallback.aidl
+├── IPrintClient.aidl
+├── IPrintDocumentAdapter.aidl
+├── IPrinterDiscoveryObserver.aidl
+├── IPrintJobStateChangeListener.aidl
+├── IPrintManager.aidl
+├── IPrintSpooler.aidl
+├── IPrintSpoolerCallbacks.aidl
+├── IPrintSpoolerClient.aidl
+├── IWriteResultCallback.aidl
+├── PageRange.aidl
+├── PageRange.java
+├── pdf
+│   └── PrintedPdfDocument.java
+├── PrintAttributes.aidl
+├── PrintAttributes.java
+├── PrintDocumentAdapter.java
+├── PrintDocumentInfo.aidl
+├── PrintDocumentInfo.java
+├── PrinterCapabilitiesInfo.aidl
+├── PrinterCapabilitiesInfo.java
+├── PrinterDiscoverySession.java
+├── PrinterId.aidl
+├── PrinterId.java
+├── PrinterInfo.aidl
+├── PrinterInfo.java
+├── PrintFileDocumentAdapter.java
+├── PrintJobId.aidl
+├── PrintJobId.java
+├── PrintJobInfo.aidl
+├── PrintJobInfo.java
+├── PrintJob.java
+└── PrintManager.java
+
+
+frameworks/base/tools/preload/PrintPsTree.java
+frameworks/base/tools/preload/PrintCsv.java
+frameworks/base/tools/preload/PrintHtmlDiff.java
+
+
+
+2	从设置中的打印入口
+	花了一些时间，没有完成
+
+3	找个APK，看如何调用打印接口打印
+
+
+
+
+
+
+
+
+##	蓝牙打印机
+	
+
+
+##	附一	参考资料
+1	android developer site
+	http://developer.android.com/about/versions/kitkat.html
+2	安卓手机连接蓝牙打印机实现打印功能
+	http://blog.csdn.net/reality_jie_blog/article/details/11895843
+3	Android蓝牙打印格式排版
+	http://blog.csdn.net/qq331710168/article/details/9170135
