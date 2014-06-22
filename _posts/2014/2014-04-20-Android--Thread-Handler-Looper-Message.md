@@ -4,7 +4,7 @@ title: Android--Thread-Handler-Looper-Message
 categories:
 - programmer
 tags:
-- android_basis
+- android
 ---
 
 

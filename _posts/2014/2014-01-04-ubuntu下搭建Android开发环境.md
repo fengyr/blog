@@ -4,7 +4,7 @@ title: ubuntu下搭建Android开发环境
 categories:
 - programmer
 tags:
-- android_basis
+- android
 ---
 
 

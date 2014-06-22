@@ -1,6 +1,7 @@
 Peter's Blog
 
 1   categories & tags
+---------------------------------------------
     programmer
         android
         c
@@ -9,11 +10,15 @@ Peter's Blog
         tools
         shell
         git
+		basic
+		datastructures_algorithm
 
     thinker
         life
+		work
+		others
 
-    DataStructures_Algorithm
+---------------------------------------------
 
 2   须知
     尽量确保工程体积小，因此

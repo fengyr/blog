@@ -4,7 +4,7 @@ title: Android下的VOIP实现
 categories:
 - programmer
 tags:
-- android_basis
+- android
 ---
 
 
