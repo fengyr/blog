@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Android--GPS
+title: Android-GPS
 categories:
 - programmer
 tags:
@@ -9,18 +9,20 @@ tags:
 
 
 ## 一 Android GPS 基本介绍
-1	GPS 介绍		
-GPS是英文Global Positioning System（全球定位系统）的简称		
+1.	GPS 介绍		
+GPS是英文 Global Positioning System（全球定位系统）的简称		
 
+
+2.	Android GPS 介绍		
 
 
 
 
 ## 二 Android GPS 框架
 
-基于 android4.0
+基于 __android4.0__
 
-> 1	基本框架
+1.	基本框架
 
 		Application
 			Location Application
@@ -45,8 +47,11 @@ GPS是英文Global Positioning System（全球定位系统）的简称
 				GPS Device
 
 
+2.	几个重要的地方		
 
-> 2	涉及文件
+
+
+3.	涉及文件
 
 		frameworks/base/location/
 		frameworks/base/services/java/com/android/server/location/
@@ -56,42 +61,54 @@ GPS是英文Global Positioning System（全球定位系统）的简称
 		gps.h
 
 
-> 3	GPS 头文件定义		
+4.	GPS 头文件定义		
 gps.h 定义了GPS底层相关的结构体和接口，其中几个重要的结构体		
 
-	GpsLocation			
-	GPS位置信息结构体，包含经纬度，高度，速度，方位角等		
+	GpsLocation
+	GPS位置信息结构体，包含经纬度，高度，速度，方位角等
 
-	GpsStatus		
-	GPS状态包括5种状态，分别为未知，正在定位，停止定位，启动未定义，未启动		
+	GpsStatus
+	GPS状态包括5种状态，分别为未知，正在定位，停止定位，启动未定义，未启动
 
-	GpsSvInfo		
-	GPS卫星信息，包含卫星编号，信号强度，卫星仰望角，方位角等			
+	GpsSvInfo
+	GPS卫星信息，包含卫星编号，信号强度，卫星仰望角，方位角等
 
-	GpsSvStatus		
-	GPS卫星状态，包含可见卫星数和信息，星历时间，年历时间等		
+	GpsSvStatus
+	GPS卫星状态，包含可见卫星数和信息，星历时间，年历时间等
 
-	GpsCallbacks		
-	回调函数定义		
+	GpsCallbacks
+	回调函数定义
 
-	GpsInterface		
-	GPS接口是最重要的结构体，上层是通过此接口与硬件适配层交互的		
+	GpsInterface
+	GPS接口是最重要的结构体，上层是通过此接口与硬件适配层交互的	
 
-	gps_device_t		
-	GPS设备结构体，继承自hw_device_tcommon，硬件适配接口，向上层提供了重要的get_gps_interface接口		
-
-
-> 4	HAL		
-GPS硬件适配层的源码位于：hardware/qcom/gps目录下			
+	gps_device_t
+	GPS设备结构体，继承自hw_device_tcommon，硬件适配接口，向上层提供了重要的get_gps_interface接口
 
 
-> 5	JNI		
-GPSJNI适配层的源码位于：frameworks/base/services/jni/com_android_server_location_GpsLocationProvider.cpp			
+5.	HAL		
+GPS硬件适配层的源码位于：			
+hardware/qcom/gps目录下			
+
+重要的几个地方		
+- xxxx
+- xxxx
 
 
 
-> 6	Framework		
+6.	JNI		
+GPS JNI适配层的源码位于：		
+frameworks/base/services/jni/com_android_server_location_GpsLocationProvider.cpp			
+
+重要的几个地方		
+- xxxx
+- xxxx
+
+
+
+7.	Framework		
 GPSFramework源码位于：frameworks/base/location		
+
 GPSFramework重要的接口和类		
 
 	GpsStatus.Listener
@@ -114,45 +131,74 @@ GPSFramework重要的接口和类
 	LocationProvider	抽象类，用于提供位置提供者
 	
 
-> 7	Application			
+8.	Application			
 
 
 
 
 ## 三 Android GPS 具体流程
-> 1	初始化		
-
-	SystemServer.java -> LocationManagerService.java -> ...
-
+1.	初始化		
 从 SystemServer 启动 LocationManagerService, 到 Framework, JNI, HAL 的过程
 
+	SystemServer.java
+		location = new LocationManagerService(context);
+		ServiceManager.addService(Context.LOCATION_SERVICED, location);
+	LocationManagerService.java
+		run
+			mLocationHandler = new LocationWorkerHandler();
+				handler msg: MESSAGE_LOCATION_CHANGED MESSAGE_PACKAGE_UPDATED
+
+			initialize() -> loadProviders() -> ... -> _loadProvidersLocked()
+				if GpsLocationProvider.isSupported
+					class_init_native -> JNI
+						android_location_GpsLocationProvider_class_init_native
+						1)	get method at GpsLocationProvider
+								env->GetMethodID(... method_name)
+						2)	get GpsInterface sGpsInterface
+								hw_get_module(.. module)
+								module->methods->open(... device)
+								sGpsInterface = gps_device->get_gps_interface(gps_device);
+						3)	get GpsXXXInterface, AGpsXXXInterface
+								sGpsInterface->get_extension
+
+		detail for 2)
+			see at
+				hardware/qcom/gps/loc_api/libloc_api/gps.c
+				hardware/qcom/gps/loc_api/libloc_api/loc_eng.cpp
+				hardware/libhardware/include/hardware/gps.h
+
+		detail for 3)
+			see at 
+				hardware/qcom/gps/loc_api/libloc_api/loc_eng.cpp
+				hardware/libhardware/include/hardware/gps.h
+			
 
 
-> 2	获取位置信息		
+2.	获取位置信息
 
 	//获取位置服务
-	LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
+	LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-	Criteria criteria = new Criteria();  
-	// 获得最好的定位效果  
+	Criteria criteria = new Criteria();
+	// 获得最好的定位效果
 	criteria.setAccuracy(Criteria.ACCURACY_FINE);			//设置为最大精度
 	criteria.setAltitudeRequired(false);					//不获取海拔信息
 	criteria.setBearingRequired(false);						//不获取方位信息
 	criteria.setCostAllowed(false);							//是否允许付费
 	criteria.setPowerRequirement(Criteria.POWER_LOW);		// 使用省电模式
 
-	// 获得当前的位置提供者  
+	// 获得当前的位置提供者
 	String provider = locationManager.getBestProvider(criteria, true);
   
-	// 获得当前的位置  
-	Location location = locationManager.getLastKnownLocation(provider);  
+	// 获得当前的位置
+	Location location = locationManager.getLastKnownLocation(provider);
 
-	Geocoder gc = new Geocoder(this);   
-	List<Address> addresses = null;  
+	Geocoder gc = new Geocoder(this); 
+	List<Address> addresses = null;
 	try {
 		//根据经纬度获得地址信息  
 		addresses = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);  
-	} catch (IOException e) {  
+	} catch (IOException e) {
 		e.printStackTrace();  
 	}
 
@@ -166,24 +212,32 @@ GPSFramework重要的接口和类
 	}
 
 
-从 Application ( locationManager.getLastKnownLocation ) 到 Framework, JNI, HAL 的过程
+从 Application 如上代码 ( __locationManager.getLastKnownLocation__ ) 到 Framework, JNI, HAL 的过程		
+待看源码
 
+
+
+3.	位置改变
+
+
+
+4.	xxxxx
 
 
 
 
 ## 四 参考资料
-1	Android系统Gps分析（一）										
+1.	Android系统Gps分析（一）										
 	http://blog.csdn.net/xnwyd/article/details/7198728			
-2	基于android 的GPS 移植——主要结构体及接口介绍					
+2.	基于android 的GPS 移植——主要结构体及接口介绍					
 	http://blog.csdn.net/jshazk1989/article/details/6876410		
-3	基于android 的GPS 移植——调用关系								
+3.	基于android 的GPS 移植——调用关系								
 	http://blog.csdn.net/jshazk1989/article/details/6877823		
-4	android developer		
+4.	android developer		
 	http://developer.android.com/reference/android/location/LocationManager.html			
-5	android GPS定位系统		
+5.	android GPS定位系统		
 	http://www.2cto.com/kf/201205/129836.html				
-6	Android Gps  			
+6.	Android Gps  			
 	http://xxw8393.blog.163.com/blog/static/3725683420107424543609/				
 
 
