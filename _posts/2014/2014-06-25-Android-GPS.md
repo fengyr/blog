@@ -48,6 +48,11 @@ GPS是英文 Global Positioning System（全球定位系统）的简称
 
 
 2.	几个重要的地方		
+1)	大概的流程，逻辑简述
+
+2）	主要的几个线程
+
+3）	几个重要的流程
 
 
 
@@ -166,6 +171,7 @@ GPSFramework重要的接口和类
 				hardware/qcom/gps/loc_api/libloc_api/gps.c
 				hardware/qcom/gps/loc_api/libloc_api/loc_eng.cpp
 				hardware/libhardware/include/hardware/gps.h
+				hardware/libhardware/hardware.c
 
 		detail for 3)
 			see at 
@@ -213,11 +219,49 @@ GPSFramework重要的接口和类
 
 
 从 Application 如上代码 ( __locationManager.getLastKnownLocation__ ) 到 Framework, JNI, HAL 的过程		
-待看源码
+
+__locationManager.getBestProvider__
+__locationManager.getLastKnownLocation__
+
+
+
 
 
 
 3.	位置改变
+
+	//匿名类，继承自LocationListener接口
+	private final LocationListener locationListener = new LocationListener() {
+		public void onLocationChanged(Location location) {
+			updateWithNewLocation(location);		//更新位置信息
+		}
+
+		public void onProviderDisabled(String provider){
+			updateWithNewLocation(null);			//更新位置信息
+		}
+
+		public void onProviderEnabled(String provider){ }
+		public void onStatusChanged(String provider, int status,Bundle extras){ }
+    };
+
+	//更新位置信息
+	private void updateWithNewLocation(Location location) {
+		if (location != null) {
+			//获取经纬度
+			double lat = location.getLatitude();
+			double lng = location.getLongitude();
+		}
+	}
+	
+	//添加侦听
+	locationManager.requestLocationUpdates(provider, 2000, 10,locationListener);
+
+
+__locationManager.requestLocationUpdates__
+
+
+
+
 
 
 
@@ -226,7 +270,14 @@ GPSFramework重要的接口和类
 
 
 
-## 四 参考资料
+
+## 四 Android GPS DEMO APK
+
+
+
+
+
+## 附一 参考资料
 1.	Android系统Gps分析（一）										
 	http://blog.csdn.net/xnwyd/article/details/7198728			
 2.	基于android 的GPS 移植——主要结构体及接口介绍					
