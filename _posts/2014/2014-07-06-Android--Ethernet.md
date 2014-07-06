@@ -9,94 +9,92 @@ tags:
 
 
 
-Ò»	Éæ¼°ÎÄ¼þ
+ä¸€  æ¶‰åŠæ–‡ä»¶
 
-	1	packages/app/Settings/:    //SettingÖÐÌí¼ÓÑ¡Ïî´úÂë
-		packages/apps/Settings/src/com/android/settings/ethernet/EthernetSettings.java
-		packages/apps/Settings/src/com/android/settings/ethernet/EthernetEnabler.java
-		packages/apps/Settings/src/com/android/settings/ethernet/EthernetConfigDialog.java
+    1   packages/app/Settings/:    //Settingä¸­æ·»åŠ é€‰é¡¹ä»£ç 
+        packages/apps/Settings/src/com/android/settings/ethernet/EthernetSettings.java
+        packages/apps/Settings/src/com/android/settings/ethernet/EthernetEnabler.java
+        packages/apps/Settings/src/com/android/settings/ethernet/EthernetConfigDialog.java
 
-	2	frameworks/base/ :
-		SystemUI:   //×´Ì¬À¸£¨status_bar£©ÏÔÊ¾²¿·Ö´úÂë
-		frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/policy/NetworkController.java
-		frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/SignalClusterView.java    //ÏÖÊµstatusbar
+    2   frameworks/base/ :
+        SystemUI:   //çŠ¶æ€æ ï¼ˆstatus_barï¼‰æ˜¾ç¤ºéƒ¨åˆ†ä»£ç 
+        frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/policy/NetworkController.java
+        frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/SignalClusterView.java    //çŽ°å®žstatusbar
 
-		ConnectivityService:
-		frameworks/base/services/java/com/android/server/ConnectivityService.java   //ÕâÀïÊÇethernet²¿·Ö³ÌÐòµÄÆðÊ¼µã
+        ConnectivityService:
+        frameworks/base/services/java/com/android/server/ConnectivityService.java   //è¿™é‡Œæ˜¯ethernetéƒ¨åˆ†ç¨‹åºçš„èµ·å§‹ç‚¹
 
-		jni:
-		frameworks/base/core/jni/android_net_ethernet.cpp  //ÐÂ¼ÓµÄÒ»Ð©jni
+        jni:
+        frameworks/base/core/jni/android_net_ethernet.cpp  //æ–°åŠ çš„ä¸€äº›jni
 
-		±¾À´¾ÍÓÐµÄethernet£º
-		frameworks/base/services/java/com/android/server/EthernetService.java
-		frameworks/base/services/java/com/android/server/NetworkManagementService.java
-		frameworks/base/core/java/android/net/NetworkStats.java 
+        æœ¬æ¥å°±æœ‰çš„ethernetï¼š
+        frameworks/base/services/java/com/android/server/EthernetService.java
+        frameworks/base/services/java/com/android/server/NetworkManagementService.java
+        frameworks/base/core/java/android/net/NetworkStats.java
 
-		ÐÂÌí¼ÓµÄethernet£º
-		frameworks/base/ethernet/*  // ÕâÊÇÖ÷Òªethernet²¿·Ö£¬java api ´úÂë¡£
-		frameworks/base/ethernet/java/android/net/ethernet/EthernetManager.java
+        æ–°æ·»åŠ çš„ethernetï¼š
+        frameworks/base/ethernet/*  // è¿™æ˜¯ä¸»è¦ethernetéƒ¨åˆ†ï¼Œjava api ä»£ç ã€‚
+        frameworks/base/ethernet/java/android/net/ethernet/EthernetManager.java
+
+äºŒ  è°ƒè¯•android ethernet çš„å¸¸ç”¨å‘½ä»¤
+
+    1   netcfg
+        netcfg   //æŸ¥çœ‹ipæƒ…å†µ
+        netcfg eth0 up dhcp   //é€šè¿‡dhcp è‡ªåŠ¨èŽ·å–ipå’Œç½‘å…³
+
+    2   ifconfig
+        ifconfig eth0 128.224.156.81 up
+
+        ifconfig eth0 128.224.156.81 netmask 255.255.255.0 up
+
+    3   gateway é…ç½®
+        route add default gw 192.168.0.1 dev eth0
+
+    4   dns é…ç½®
+        echo "nameserver 128.224.160.11" > resolv.conf
+        nameserver 128.224.160.11
+
+        setprop net.dns1 128.224.160.11
+        setprop net.dns2 147.11.100.30
+
+    5   mac adddr
+        ifconfig eth0 hw ether 00:11:22:33:44:55
 
 
-¶þ	µ÷ÊÔandroid ethernet µÄ³£ÓÃÃüÁî
+ä¸‰  åŸºæœ¬æµç¨‹åˆ†æž
 
-	1	netcfg
-		netcfg   //²é¿´ipÇé¿ö
-		netcfg eth0 up dhcp   //Í¨¹ýdhcp ×Ô¶¯»ñÈ¡ipºÍÍø¹Ø
+1   ethernet çš„åˆå§‹åŒ–è¿‡ç¨‹
 
-	2	ifconfig
-		ifconfig eth0 128.224.156.81 up
-
-		ifconfig eth0 128.224.156.81 netmask 255.255.255.0 up
-
-	3	gateway ÅäÖÃ
-		route add default gw 192.168.0.1 dev eth0
-
-	4	dns ÅäÖÃ
-		echo "nameserver 128.224.160.11" > resolv.conf
-		nameserver 128.224.160.11
-
-		setprop net.dns1 128.224.160.11
-		setprop net.dns2 147.11.100.30
-
-	5	mac adddr
-		ifconfig eth0 hw ether 00:11:22:33:44:55
-
-
-Èý	»ù±¾Á÷³Ì·ÖÎö
-
-1	ethernet µÄ³õÊ¼»¯¹ý³Ì
-
-	ConnectivityService.java
-		getActiveNetworkInfo -> getNetworkInfo -> 
-		ConnectivityService
-			// Load device network attributes from resources
-			com.android.internal.R.array.radioAttributes
-			com.android.internal.R.array.networkAttributes
+    ConnectivityService.java
+        getActiveNetworkInfo -> getNetworkInfo ->
+        ConnectivityService
+            // Load device network attributes from resources
+            com.android.internal.R.array.radioAttributes
+            com.android.internal.R.array.networkAttributes
 
             case ConnectivityManager.TYPE_ETHERNET:
-	            mNetTrackers[netType] = EthernetDataTracker.getInstance();
-	            mNetTrackers[netType].startMonitoring(context, mHandler);
-	            break;
+                mNetTrackers[netType] = EthernetDataTracker.getInstance();
+                mNetTrackers[netType].startMonitoring(context, mHandler);
+                break;
+
+2   ç½‘ç»œä¼˜å…ˆçº§ç®¡ç†
 
 
-2	ÍøÂçÓÅÏÈ¼¶¹ÜÀí
+ç³»ç»Ÿå¯åŠ¨æ—¶EthernetStateTrackerå°±ä¼šåˆ›å»ºEthernetMonitorçº¿ç¨‹æ¥ç›‘å¬ç½‘ç»œçŠ¶æ€ä¿¡æ¯ï¼Œ ç›‘å¬çš„é€šè¿‡jniè°ƒç”¨cä»£ç å®Œæˆçš„ï¼Œ åŽŸç†å°±æ˜¯ç›‘å¬NetLink Socketï¼Œ
+ç½‘ç»œè¿žæŽ¥æˆ–æ–­å¼€æ—¶è¿™ä¸ªsocketç«¯å£å°±ä¼šæŽ¥æ”¶åˆ°ä¿¡æ¯ã€‚å½“æœ‰ç½‘çº¿è¿žæŽ¥ä¸Šæ—¶ï¼ŒEthernetMonitorçº¿ç¨‹å°±ä¼šç»™EthernetStateTrackerå‘é€EVENT_HW_PHYCONNECTæ¶ˆæ¯ï¼Œ
+EthernetStateTrackerè¯»å–é…ç½®ä¿¡æ¯ï¼Œ ç”±äºŽæˆ‘ä»¬åœ¨Settingsè®¾ç½®ä¸ºDHCP, å°±ä¼šé€šè¿‡DhcpHandleç»™DhcpThreadå‘é€EVENT_DHCP_STARTä¿¡æ¯ï¼Œ
+DhcpThreadå°±ä¼šè¿è¡ŒNetUtil.runDhcp()æ¥è‡ªåŠ¨èŽ·å–ç½‘ç»œåœ°å€ã€‚æŽ¥ä¸‹æ¥EthernetMonitorçº¿ç¨‹åˆä¼šæ”¶åˆ°ç½‘ç»œå·²é€šçš„æ¶ˆæ¯ï¼Œ å¹¶é€šè¿‡EVENT_HW_CONNECTEDé€šçŸ¥
+EthernetStateTracker EthernetStateTrackeræŽ¥ç€ä¼šå‘é€EVENT_STATE_CHANGEDæ¶ˆæ¯ç»™ConnectivityServiceã€‚
 
 
-ÏµÍ³Æô¶¯Ê±EthernetStateTracker¾Í»á´´½¨EthernetMonitorÏß³ÌÀ´¼àÌýÍøÂç×´Ì¬ÐÅÏ¢£¬ ¼àÌýµÄÍ¨¹ýjniµ÷ÓÃc´úÂëÍê³ÉµÄ£¬ Ô­Àí¾ÍÊÇ¼àÌýNetLink Socket£¬ 
-ÍøÂçÁ¬½Ó»ò¶Ï¿ªÊ±Õâ¸ösocket¶Ë¿Ú¾Í»á½ÓÊÕµ½ÐÅÏ¢¡£µ±ÓÐÍøÏßÁ¬½ÓÉÏÊ±£¬EthernetMonitorÏß³Ì¾Í»á¸øEthernetStateTracker·¢ËÍEVENT_HW_PHYCONNECTÏûÏ¢£¬ 
-EthernetStateTracker¶ÁÈ¡ÅäÖÃÐÅÏ¢£¬ ÓÉÓÚÎÒÃÇÔÚSettingsÉèÖÃÎªDHCP, ¾Í»áÍ¨¹ýDhcpHandle¸øDhcpThread·¢ËÍEVENT_DHCP_STARTÐÅÏ¢£¬ 
-DhcpThread¾Í»áÔËÐÐNetUtil.runDhcp()À´×Ô¶¯»ñÈ¡ÍøÂçµØÖ·¡£½ÓÏÂÀ´EthernetMonitorÏß³ÌÓÖ»áÊÕµ½ÍøÂçÒÑÍ¨µÄÏûÏ¢£¬ ²¢Í¨¹ýEVENT_HW_CONNECTEDÍ¨Öª
-EthernetStateTracker EthernetStateTracker½Ó×Å»á·¢ËÍEVENT_STATE_CHANGEDÏûÏ¢¸øConnectivityService¡£
-
-
-ÖØµãÔÚÓÚÓÅÏÈ¼¶ÖÙ²ÃµÄ½×¶Î£¬¸÷×ÔÍøÂçÅäÖÃºÃºó£¬»á×Ô¶¯µ½ÓÅÏÈ¼¶ÖÙ²ÃµÄµØ·½±¨µÀ£º
-frameworks/base/services/java/com/android/server/ConnectivityService.javaµÄNetworkStateTrackerHandlerµÄhandleMessageÖÐ¡£
-·ÖÎöÖÙ²Ã¾ßÌåÊÇÔÚcase NetworkStateTracker.EVENT_STATE_CHANGED:Õâ¸ö·ÖÖ§µÄhandleCaptivePortalTrackerCheck(info);½øÐÐµÄ£¬ÔÙ½øÒ»²½ÊÇÕâÀïisNewNetTypePreferredOverCurrentNetTypeÈç¹û·µ»Øtrue¾ÍÇÐ»»µ½ÐÂµÄÍøÂç£¬·´Ö®²»ÇÐ»»¡£
+é‡ç‚¹åœ¨äºŽä¼˜å…ˆçº§ä»²è£çš„é˜¶æ®µï¼Œå„è‡ªç½‘ç»œé…ç½®å¥½åŽï¼Œä¼šè‡ªåŠ¨åˆ°ä¼˜å…ˆçº§ä»²è£çš„åœ°æ–¹æŠ¥é“ï¼š
+frameworks/base/services/java/com/android/server/ConnectivityService.javaçš„NetworkStateTrackerHandlerçš„handleMessageä¸­ã€‚
+åˆ†æžä»²è£å…·ä½“æ˜¯åœ¨case NetworkStateTracker.EVENT_STATE_CHANGED:è¿™ä¸ªåˆ†æ”¯çš„handleCaptivePortalTrackerCheck(info);è¿›è¡Œçš„ï¼Œå†è¿›ä¸€æ­¥æ˜¯è¿™é‡ŒisNewNetTypePreferredOverCurrentNetTypeå¦‚æžœè¿”å›žtrueå°±åˆ‡æ¢åˆ°æ–°çš„ç½‘ç»œï¼Œåä¹‹ä¸åˆ‡æ¢ã€‚
 
     private boolean isNewNetTypePreferredOverCurrentNetType(int type) {
         if (DBG) {
             log("type = " + type);
-			log("mNetworkPreference = " + mNetworkPreference);
+            log("mNetworkPreference = " + mNetworkPreference);
             log("mNetConfigs[mActiveDefaultNetwork].priority = " + mNetConfigs[mActiveDefaultNetwork].priority);
             log(" mNetConfigs[type].priority = "+ mNetConfigs[type].priority);
             log("mNetworkPreference = " + mNetworkPreference);
@@ -110,85 +108,57 @@ frameworks/base/services/java/com/android/server/ConnectivityService.javaµÄNetwo
         return true;
     }
 
-×ª»»³ÉÈËÀàÓïÑÔ£º
-(£¨ÐÂÁ¬½ÓµÄÍøÂçÀàÐÍ ²» µÈÓÚÆ«ºÃ£© ÇÒ (ÐÂÁ¬½ÓÍøÂçÀàÐÍÓÅÏÈ¼¶ µÍÓÚ µ±Ç°ÍøÂçÀàÐÍÓÅÏÈ¼¶)) 
-               »òÕß 
-              £¨Æ«ºÃÀàÐÍÕýÊÇµ±Ç°ÍøÂçÀàÐÍ£©£©
-              Ôò²»ÇÐ 
-ÐÂÁ¬½ÓµÄÍøÂçÀàÐÍ     £½ type                     ÕâÀïÊÇwifi
-Æ«ºÃ                 £½ mNetworkPreference        ÕâÀïÊÇwifi
-ÐÂÁ¬½ÓÍøÂçÀàÐÍÓÅÏÈ¼¶ £½ mNetConfigs[type].priority  wifiÓÅÏÈ¼¶ ÕâÀïÊÇ1
-µ±Ç°ÍøÂçÀàÐÍÓÅÏÈ¼¶   £½ ÒÔÌ«ÍøÓÅÏÈ¼¶             ÕâÀïÊÇ4
-µ±Ç°ÍøÂçÀàÐÍ         £½ mActiveDefaultNetwork     ÕâÀïÊÇÒÔÌ«Íø
-frameworks\base\core\res\res\values-large\config.xml ÖÐÓÐÕâÖÖÍøÂçÀàÐÍ£º
+è½¬æ¢æˆäººç±»è¯­è¨€ï¼š
+(ï¼ˆæ–°è¿žæŽ¥çš„ç½‘ç»œç±»åž‹ ä¸ ç­‰äºŽåå¥½ï¼‰ ä¸” (æ–°è¿žæŽ¥ç½‘ç»œç±»åž‹ä¼˜å…ˆçº§ ä½ŽäºŽ å½“å‰ç½‘ç»œç±»åž‹ä¼˜å…ˆçº§))
+               æˆ–è€…
+              ï¼ˆåå¥½ç±»åž‹æ­£æ˜¯å½“å‰ç½‘ç»œç±»åž‹ï¼‰ï¼‰
+              åˆ™ä¸åˆ‡
+æ–°è¿žæŽ¥çš„ç½‘ç»œç±»åž‹     ï¼ type                     è¿™é‡Œæ˜¯wifi
+åå¥½                 ï¼ mNetworkPreference        è¿™é‡Œæ˜¯wifi
+æ–°è¿žæŽ¥ç½‘ç»œç±»åž‹ä¼˜å…ˆçº§ ï¼ mNetConfigs[type].priority  wifiä¼˜å…ˆçº§ è¿™é‡Œæ˜¯1
+å½“å‰ç½‘ç»œç±»åž‹ä¼˜å…ˆçº§   ï¼ ä»¥å¤ªç½‘ä¼˜å…ˆçº§             è¿™é‡Œæ˜¯4
+å½“å‰ç½‘ç»œç±»åž‹         ï¼ mActiveDefaultNetwork     è¿™é‡Œæ˜¯ä»¥å¤ªç½‘
+frameworks\base\core\res\res\values-large\config.xml ä¸­æœ‰è¿™ç§ç½‘ç»œç±»åž‹ï¼š
 
 
 
 
 
 
-ÐèÒªÀí½âÕû¸öÁ÷³Ì£º
+éœ€è¦ç†è§£æ•´ä¸ªæµç¨‹ï¼š
 
-	Ethernet
-		Functional requirements
-	1	Automatic detection of net cable plug in/out
-	2	Network configuration
-		>	automatic configure network ofter android boot up
-		>	configure network according to user choice
-			-	support dhcp mode
-			-	support static ip mode
-	3	Network status notification
-	4	UI
-	5	Data storage
-
-
-	get network info from kernel
-		get all the net devices from kernel, store then in interface_info_t
-		create a AF_NLINK socket to receive net devices status change
-		get net device count
-		get net device name with the index argument
-
-	implement JNI
-		java -> JNI ->
-	
-	monitor net device status
-		we can detect the net calbe plug in/out
-
-	handler net device status change
-		we can notify user about network status
-		we can support dhcp and static ip
-
-	start a service
-	
-	UI
-
-	data storage
+    Ethernet
+        Functional requirements
+    1   Automatic detection of net cable plug in/out
+    2   Network configuration
+        >   automatic configure network ofter android boot up
+        >   configure network according to user choice
+            -   support dhcp mode
+            -   support static ip mode
+    3   Network status notification
+    4   UI
+    5   Data storage
 
 
+    get network info from kernel
+        get all the net devices from kernel, store then in interface_info_t
+        create a AF_NLINK socket to receive net devices status change
+        get net device count
+        get net device name with the index argument
 
+    implement JNI
+        java -> JNI ->
 
+    monitor net device status
+        we can detect the net calbe plug in/out
 
+    handler net device status change
+        we can notify user about network status
+        we can support dhcp and static ip
 
+    start a service
 
+    UI
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    data storage
 
