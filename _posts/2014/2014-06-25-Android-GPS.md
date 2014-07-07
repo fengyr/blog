@@ -299,6 +299,8 @@ __locationManager.requestLocationUpdates__
 	http://www.2cto.com/kf/201205/129836.html				
 6.	Android Gps  			
 	http://xxw8393.blog.163.com/blog/static/3725683420107424543609/				
+7	二十七、Android之GPS定位详解		
+	http://www.cnblogs.com/linjiqin/archive/2011/11/01/2231598.html			
 
 
 

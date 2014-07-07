@@ -44,5 +44,7 @@ tags:
 	http://blog.csdn.net/nxh_love/article/details/11804841			
 3	Android设备中实现Orientation Sensor(图)兼谈陀螺仪					
 	http://blog.csdn.net/beeboobeeboo/article/details/6536941		
+4	Android传感器之陀螺仪传感器			
+	http://blog.csdn.net/zhangfei2018/article/details/10582031			
 
 
