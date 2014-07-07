@@ -162,3 +162,17 @@ frameworks\base\core\res\res\values-large\config.xml 中有这种网络类型：
 
     data storage
 
+
+## 附一 参考资料
+1	android ethernet		
+	http://blog.csdn.net/MARTINGANG/article/details/8170950			
+2	EthernetMornitor 与 EthernetStateTracker			
+	http://blog.csdn.net/lamdoc/article/details/7652677			
+3	Android2.3 Ethernet Framework 移植(一)			
+	http://blog.csdn.net/kitty6620/article/details/7986864			
+4	android 2.3 ethernet		
+	http://blog.csdn.net/z642010820/article/details/7341479			
+5	看看写写 之 Android上Ethernet和netd那点事			
+	http://blog.csdn.net/doyouenjoyit/article/details/8196224			
+
+
