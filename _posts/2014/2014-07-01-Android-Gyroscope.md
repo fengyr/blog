@@ -46,5 +46,6 @@ tags:
 	http://blog.csdn.net/beeboobeeboo/article/details/6536941		
 4	Android传感器之陀螺仪传感器			
 	http://blog.csdn.net/zhangfei2018/article/details/10582031			
-
+5	Android---陀螺仪传感器		
+	http://blog.csdn.net/weborn/article/details/6977366		
 
