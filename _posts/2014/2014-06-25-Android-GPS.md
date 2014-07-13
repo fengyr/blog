@@ -301,6 +301,12 @@ __locationManager.requestLocationUpdates__
 	http://xxw8393.blog.163.com/blog/static/3725683420107424543609/				
 7	二十七、Android之GPS定位详解		
 	http://www.cnblogs.com/linjiqin/archive/2011/11/01/2231598.html			
+8	Android GPS应用：临近警告		
+	http://blog.csdn.net/u010142437/article/details/9391189			
+9	Android GPS应用：动态获取位置信息		
+	http://blog.csdn.net/u010142437/article/details/9390663			
+10	Android中GPS简介及其应用		
+	http://blog.csdn.net/u010142437/article/details/9390065		
 
 
 
