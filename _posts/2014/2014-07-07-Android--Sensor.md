@@ -11,6 +11,53 @@ tags:
 ## 问题
 
 
+./frameworks/base/core/java/android/hardware/Sensor.java
+./frameworks/base/core/java/android/hardware/SensorManager.java
+./frameworks/base/core/java/android/hardware/SensorListener.java
+./frameworks/base/core/java/android/hardware/SensorEvent.java
+./frameworks/base/core/java/android/hardware/SensorEventListener2.java
+./frameworks/base/core/java/android/hardware/SensorEventListener.java
+
+./frameworks/native/services/sensorservice/SensorDevice.h
+./frameworks/native/services/sensorservice/SensorFusion.h
+./frameworks/native/services/sensorservice/SensorService.cpp
+./frameworks/native/services/sensorservice/SensorDevice.cpp
+./frameworks/native/services/sensorservice/SensorService.h
+./frameworks/native/services/sensorservice/SensorFusion.cpp
+./frameworks/native/services/sensorservice/SensorInterface.cpp
+./frameworks/native/services/sensorservice/SensorInterface.h
+
+./frameworks/native/libs/gui/SensorManager.cpp
+./frameworks/native/libs/gui/SensorEventQueue.cpp
+./frameworks/native/libs/gui/Sensor.cpp
+
+./frameworks/native/include/gui/Sensor.h
+./frameworks/native/include/gui/SensorManager.h
+./frameworks/native/include/gui/SensorEventQueue.h
+
+./hardware/ti/omap4xxx/camera/inc/SensorListener.h
+./hardware/ti/omap4xxx/camera/SensorListener.cpp
+
+./hardware/akm/AK8975_FS/libsensors/SensorBase.cpp
+./hardware/akm/AK8975_FS/libsensors/SensorBase.h
+
+./hardware/invensense/65xx/libsensors_iio/SensorBase.cpp
+./hardware/invensense/65xx/libsensors_iio/SensorBase.h
+./hardware/invensense/60xx/libsensors_iio/SensorBase.cpp
+./hardware/invensense/60xx/libsensors_iio/SensorBase.h
+./hardware/invensense/60xx/libsensors/SensorBase.cpp
+./hardware/invensense/60xx/libsensors/SensorBase.h
+
+./device/samsung/manta/libsensors/SensorBase.cpp
+./device/samsung/manta/libsensors/SensorBase.h
+
+./device/generic/goldfish/camera/fake-pipeline2/Sensor.h
+./device/generic/goldfish/camera/fake-pipeline2/Sensor.cpp
+
+./device/softwinner/fiber-common/hardware/libhardware/libsensors/SensorBase.cpp
+./device/softwinner/fiber-common/hardware/libhardware/libsensors/SensorBase.h
+
+
 
 
 ## 附一 参考资料		
