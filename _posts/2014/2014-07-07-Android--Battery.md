@@ -294,6 +294,48 @@ BatteryService
 			twl4030_charger_enable_usb(bci, true);
 
 
+## android4.4
+
+	./frameworks/native/services/batteryservice/BatteryProperties.cpp
+	./frameworks/native/services/sensorservice/BatteryService.cpp
+	./frameworks/native/services/sensorservice/BatteryService.h
+	./frameworks/native/include/batteryservice/BatteryService.h
+
+
+	./system/core/healthd/BatteryMonitor.cpp
+	./system/core/healthd/BatteryPropertiesRegistrar.h
+	./system/core/healthd/BatteryPropertiesRegistrar.cpp
+	./system/core/healthd/BatteryMonitor.h
+
+基本的思路是：		
+应用层	通过广播获取电池信息，显示电池信息		
+框架层	电池属性改变事件触发，更新电池信息，状态，然后广播电池消息
+
+
+
+Uevent部分
+
+Uevent是内核通知android有状态变化的一种方法，比如USB线插入、拔出，电池电量变化等等。
+其本质是内核发送（可以通过socket）一个字符串，应用层（android）接收并解释该字符串，获取相应信息。
+如果其中有信息变化，uevent触发，做出相应的数更新
+
+Android很多事件都是通过uevent跟kernel来异步通信的。其中类UEventObserver是核心。
+UEventObserver接收kernel的uevent信息的抽象类
+
+	frameworks/base/core/java/android/os/UEventObserver.java
+	frameworks/base/core/jni/android_os_UEventObserver.cpp
+	hardware/libhardware_legacy/uevent/uevent.c
+
+读写kernel的接口socket(PF_NETLINK,SOCK_DGRAM, NETLINK_KOBJECT_UEVENT);
+
+类UEventObserver提供了三个接口给子类来调用：
+1	onUEvent(UEvent event)： 子类必须重写这个onUEvent来处理uevent。
+2	startObserving(Stringmatch)： 启动进程，要提供一个字符串参数。
+3	stopObserving()： 停止进程。
+
+
+
+
 
 ## 附一 参考资料
 1	android 电池（一）：锂电池基本原理篇								
@@ -306,4 +348,8 @@ BatteryService
 	http://blog.csdn.net/xubin341719/article/details/8969369		
 5	android电池（五）：电池 充电IC（PM2301）驱动分析篇				
 	http://blog.csdn.net/xubin341719/article/details/8970363		
+、
+
+
+
 
