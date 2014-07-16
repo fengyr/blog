@@ -119,14 +119,14 @@ Android实现传感器系统包括以下几个部分：
 	http://www.cnblogs.com/lcw/p/3402816.html		
 4	Android感应检测Sensor(简单介绍)		
 	http://blog.csdn.net/huangbiao86/article/details/6745933	
+8	Android Sensor传感器系统架构初探			
+	http://blog.csdn.net/qianjin0703/article/details/5942579		
 
 
 3	A​n​d​r​o​i​d​ ​S​e​n​s​o​r​s​分​析		
 	http://wenku.baidu.com/view/c54ed6e09b89680203d825db.html		
 7	android sensor framework			
 	http://blog.csdn.net/tommy_wxie/article/details/13773597		
-8	Android Sensor传感器系统架构初探			
-	http://blog.csdn.net/qianjin0703/article/details/5942579		
-\
+
 		
 
