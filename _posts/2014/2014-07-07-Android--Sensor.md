@@ -272,6 +272,19 @@ Android实现传感器系统包括以下几个部分
 
 
 ## 附一 参考资料			
+
+Sensor Framework原理
+http://blog.csdn.net/lizzywu/article/details/10226099
+注意，可以详细了解相关链接文章
+	深入浅出 - Android系统移植与平台开发（十四） - Sensor HAL框架分析之四
+
+
+android sensor framework
+http://blog.csdn.net/tommy_wxie/article/details/13773597
+
+
+
+
 1	Android Sensor框架HAL层解读		
 	http://www.cnblogs.com/lcw/p/3402816.html		
 2	Android感应检测Sensor(简单介绍)		
@@ -283,5 +296,8 @@ Android实现传感器系统包括以下几个部分
 5	android sensor framework			
 	http://blog.csdn.net/tommy_wxie/article/details/13773597		
 
-		
+
+
+
+
 
