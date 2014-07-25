@@ -75,229 +75,165 @@ Sensor是很常见的重要器件，比如在生活常见到的声控开关，�
 
 
 ## Android Sensor 层次结构
+Sensor 框架分为三个层次，客户度、服务端、HAL层，服务端负责从HAL读取数据，并将数据写到管道中，客户端通过管道读取服务端数据。
 
-Java -> Framework -> JNI -> HAL -> Driver -> Device
-
-
-- 重要的数据结构，函数
+![Alt text](http://zhongguomin.github.io/blog/media/images/2014/Anddroid-Sensor-01.jpg "Anddroid-Sensor-01.jpg")
 
 
-- Java
+1	客户端主要类
+
+SensorManager.java		
+从android4.1开始，把SensorManager定义为一个抽象类，定义了一些主要的方法，类主要是应用层直接使用的类，提供给应用层的接口
+
+SystemSensorManager.java		
+继承于SensorManager，客户端消息处理的实体，应用程序通过获取其实例，并注册监听接口，获取sensor数据
+
+sensorEventListener接口		
+用于注册监听的接口
+
+sensorThread		
+是SystemSensorManager的一个内部类，开启一个新线程负责读取读取sensor数据，当注册了sensorEventListener接口的时候才会启动线程
+
+android_hardware_SensorManager.cpp		
+负责与java层通信的JNI接口
+
+SensorManager.cpp		
+sensor在Native层的客户端，负责与服务端SensorService.cpp的通信
+
+SenorEventQueue.cpp		
+消息队列
 
 
-- Framework
-SensorManager.java
-		与下层接口功能：
-		1) 在SensorManager函数中
-		   (1) 调用native sensors_module_init初始化sensor list，即实例化native中的SensorManager
-		   (2) 创建SensorThread线程
-		2) 在类SensorThread中
-		   (1) 调用native sensors_create_queue创建队列
-		   (2) 在线程中dead loop地调用native sensors_data_poll以从队列sQueue中获取事件(float[] values = new float[3];)
-		   (3) 收到事件之后，报告sensor event给所有注册且关心此事件的listener
-		 
-		与上层的接口功能：
-		1) 在onPause时取消listener注册
-		2) 在onResume时注册listener
-		3) 把收到的事件报告给注册的listener
+2	服务端主要类
 
-android_hardware_SensorManager.cpp
-		实现SensorManager.java中的native函数，它主要调用SenrsorManager.cpp和SensorEventQueue.cpp中的类来完成相关的工作
+SensorService.cpp		
+服务端数据处理中心
 
-SensorManager.cpp
+SensorEventConnection		
+从BnSensorEventConnection继承来，实现接口ISensorEventConnection的一些方法，ISensorEventConnection在SensorEventQueue会保存
+一个指针，指向调用服务接口创建的SensorEventConnection对象
+	
+Bittube.cpp		
+在这个类中创建了管道，即共享内存，用于服务端与客户端读写数据
 
-
-SensorService.cpp
-		SensorService主要功能如下：
-          1) SensorService::instantiate创建实例对象，并增加到ServiceManager中，且创建并启动线程，并执行threadLoop
-          2) threadLoop从sensor驱动获取原始数据，然后通过SensorEventConnection把事件发送给客户端
-          3) BnSensorServer的成员函数负责让客户端获取sensor列表和创建SensorEventConnection
-
-
-SensorDevice.cpp
-		SensorDevice封装了对SensorHAL层代码的调用，主要包含以下功能：
-         1) 获取sensor列表(getSensorList)
-         2) 获取sensor事件(poll)
-         3) Enable或Disable sensor (activate)
-         4) 设置delay时间
-
-
-
-- JNI
-
-
-- HAL
-Sensor HAL
-		定义：/hardware/libhardware/include/hardware/sensors.h
-		实现：/hardware/mychip/sensor/st/sensors.c
-
-		struct sensors_poll_device_t 定义 
-		struct sensors_module_t  定义
-		struct sensor_t 定义
-		struct sensors_event_t 定义
-
-		struct sensors_module_t 实现
-		struct sensors_poll_device_t 实现
-
-		struct sensors_poll_context_t 定义 
-		struct sensors_poll_context_t 的实现
-
-
-- Driver
-
-
-
-
-
-
-Android实现传感器系统包括以下几个部分
-1	java层			Sensor API
-2	framework层		SensorManager SensorService
-3	JNI层			Sensor JNI
-4	HAL层			Sensor HAL
-5	驱动层			Sensor Driver
-
-
-3.1	Sensor HAL层接口
-	Google为Sensor提供了统一的HAL接口，不同的硬件厂商需要根据该接口来实现并完成具体的硬件抽象层。
-	Android中Sensor的HAL接口定义在：hardware/libhardware/include/hardware/sensors.h
-	包括：
-		对传感器类型的定义
-		传感器模块的定义结构体 sensors_module_t
-			该接口的定义实际上是对标准的硬件模块hw_module_t的一个扩展，增加了一个get_sensors_list函数，用于获取传感器的列表
-		对任意一个sensor设备都会有一个sensor_t结构体
-		每个传感器的数据由sensors_event_t结构体表示
-		sensors_vec_t结构体用来表示不同传感器的数据
-		Sensor设备结构体sensors_poll_device_t，对标准硬件设备hw_device_t结构体的扩展，主要完成读取底层数据，
-			并将数据存储在struct sensors_poll_device_t结构体中
-		控制设备打开/关闭结构体 sensors_open sensors_close
-
-
-3.2	Sensor HAL实现
-	============================================================================================
-	SensorDevice.cpp			hardware.c / .h			sensor.h		sensor.cpp		设备节点
-	============================================================================================
-	1 SensorDevice()
-	2 hw_get_module()
-								3 hw_get_module_by_class
-								4 load()
-								5 sensors_open()
-														6 hw_module_t->hw_module_methods_t->open()
-																		7 open_sensors()
-																		8 new sensor_poll_context_t()
-																		9 open_input_device()
-																		10 open
-																		11 ioctl()
-	12 sensors_module_t->get_sensors_list()
-														13 sensors_get_sensors_list()
-								14 poll_activate()
-																		15 set_sysfs_input_attr()
-																		16 open()
-																		17 write()
-								18 poll()
-														19 poll_poll()
-																		20 open()
-																		21 read()
-	============================================================================================
-
-	SensorDevice属于JNI层，与HAL进行通信的接口
-	在JNI层调用了HAL层的open_sensors()方法打开设备模块，再调用poll__activate()对设备使能，然后调用poll__poll读取数据。
+SensorDevice		
+负责与HAL读取数据
 
 
 
 
 ## 具体流程分析
 
-- 获取传感器
+- 客户端获取数据（From Server）
+
+apk注册监听器		
+	Activity实现了SensorEventListener接口，在onCreate方法中，获取SystemSensorManager，并获取到加速传感器的Sensor，
+	在onResume方法中调用SystemSensorManager. registerListenerImpl注册监听器，当Sensor数据有改变的时候将会回调onSensorChanged方法。
+
+初始化SystemSensorManager		
+	系统开机启动的时候，会创建SystemSensorManager的实例，在其构造函数中，主要做了四件事情
+
+初始化JNI		
+	调用JNI函数nativeClassInit()进行初始化
+
+初始化Sensor列表			
+	调用JNI函数sensors_module_init，对Sensor模块进行初始化。创建了native层SensorManager的实例。
+
+获取Sensor列表		
+	调用JNI函数sensors_module_get_next_sensor()获取Sensor，并存在sHandleToSensor列表中
+
+构造SensorThread类		
+	构造线程的类函数，并没有启动线程，当有应用注册的时候才会启动线程
+
+启动SensorThread线程读取消息队列中数据		
+	当有应用程序调用registerListenerImpl()方法注册监听的时候，会调用SensorThread.startLoacked()启动线程,线程只会启动一次，
+	并调用enableSensorLocked()接口对指定的sensor使能，并设置采样时间
+
+	在open函数中调用JNI函数sensors_create_queue()来创建消息队列,然后调用SensorManager. createEventQueue()创建。
+	
+	在startLocked函数中启动新的线程后，做了一个while的等待while (mSensorsReady == false)，只有当mSensorsReady等于true的时候，
+	才会执行enableSensorLocked()函数对sensor使能。而mSensorsReady变量，是在open()调用创建消息队列成功之后才会true
 
 
-- 打开设备
+
+- 服务端获取数据（From HAL）
+
+启动SensorService服务		
+	在SystemServer进程中的main函数中，通过JNI调用，调用到
+	com_android_server_SystemServer.cpp的android_server_SystemServer_init1()方法，该
+	方法又调用system_init.cpp中的system_init():
+
+SensorService初始化		
+	SensorService创建完之后，将会调用SensorService::onFirstRef()方法，在该方法中完成初始化工作。
+	首先获取SensorDevice实例，在其构造函数中，完成了对Sensor模块HAL的初始化：
+	
+这里主要做了三个工作：		
+	调用HAL层的hw_get_modele()方法，加载Sensor模块so文件
+	调用sensor.h的sensors_open方法打开设备
+	调用sensors_poll_device_t->activate()对Sensor模块使能
+	
+再来看看SensorService::onFirstRef()方法：在这个方法中，主要做了4件事情：			
+	创建SensorDevice实例
+	获取Sensor列表
+	调用SensorDevice.getSensorList(),获取Sensor模块所有传感器列表
+	为每个传感器注册监听器
+	启动线程读取数据
+	调用run方法启动新线程，将调用SensorService::threadLoop()方法。
+	
+在新的线程中读取HAL层数据			
+	SensorService实现了Thread类，当在onFirstRef中调用run方法的后，将在新的线程中调用SensorService::threadLoop()方法。
 
 
-- 获取数据
+
+
+- 服务端与客户端通信
+
+客户端服务端线程			
+	在图中我们可以看到有两个线程，一个是服务端的一个线程，这个线程负责源源不断的从HAL读取数据。另一个是客户端的一个线程，
+客户端线程负责从消息队列中读数据。
+
+创建消息队列			
+客户端可以创建多个消息队列，一个消息队列对应有一个与服务器通信的连接接口
+
+创建连接接口			
+服务端与客户端沟通的桥梁，服务端读取到HAL层数据后，会扫面有多少个与客户端连接的接口，然后往每个接口的管道中写数据
+
+创建管道			
+每一个连接接口都有对应的一个管道。
+
+上面是设计者设计数据传送的原理，但是目前Android4.1上面的数据传送不能完全按照上面的理解。因为在实际使用中，消息队列只会创建一个，
+也就是说客户端与服务端之间的通信只有一个连接接口，只有一个管道传数据。那么数据的形式是怎么从HAL层传到JAVA层的呢？其实数据是以
+一个结构体sensors_event_t的形式从HAL层传到JNI层。看看HAL的sensors_event_t结构体：
+
+在JNI层有一个ASensorEvent结构体与sensors_event_t向对应，
+
+在JNI层，只会将结构体数据中一部分的信息传到JAVA层：
+
+经过前面的介绍，我们知道了客户端实现的方式及服务端的实现，但是没有具体讲到它两是如何进行通信的，这节我们专门介绍客户端与服务端
+之间的通信。
+
+这里主要涉及的是进程间通信，有IBind和管道通信。客户端通过IBind通信获取到服务端的远程调用，然后通过管道进行sensor数据的传输。
 
 
 
+native层实现了sensor服务的核心实现，Sensor服务的主要流程的实现在sensorservice类中，
 
-## 涉及文件
+继承BinderService<SensorService>这个模板类添加到系统服务,用于Ibinder进程间通信。
 
-	./frameworks/base/core/java/android/hardware/Sensor.java
-	./frameworks/base/core/java/android/hardware/SensorManager.java
-	./frameworks/base/core/java/android/hardware/SensorListener.java
-	./frameworks/base/core/java/android/hardware/SensorEvent.java
-	./frameworks/base/core/java/android/hardware/SensorEventListener2.java
-	./frameworks/base/core/java/android/hardware/SensorEventListener.java
+在前面的介绍中，SensorService服务的实例是在System_init.cpp中调用SensorService::instantiate()创建的，即调用了上面的instantiate()
+方法，接着调用了publish(),在该方法中，我们看到了new SensorService的实例，并且调用了defaultServiceManager::addService()将Sensor
+服务添加到了系统服务管理中，客户端可以通过defaultServiceManager:getService()获取到Sensor服务的实例。
 
-	./frameworks/native/services/sensorservice/SensorDevice.h
-	./frameworks/native/services/sensorservice/SensorFusion.h
-	./frameworks/native/services/sensorservice/SensorService.cpp
-	./frameworks/native/services/sensorservice/SensorDevice.cpp
-	./frameworks/native/services/sensorservice/SensorService.h
-	./frameworks/native/services/sensorservice/SensorFusion.cpp
-	./frameworks/native/services/sensorservice/SensorInterface.cpp
-	./frameworks/native/services/sensorservice/SensorInterface.h
-
-	./frameworks/native/libs/gui/SensorManager.cpp
-	./frameworks/native/libs/gui/SensorEventQueue.cpp
-	./frameworks/native/libs/gui/Sensor.cpp
-
-	./frameworks/native/include/gui/Sensor.h
-	./frameworks/native/include/gui/SensorManager.h
-	./frameworks/native/include/gui/SensorEventQueue.h
-
-	./hardware/ti/omap4xxx/camera/inc/SensorListener.h
-	./hardware/ti/omap4xxx/camera/SensorListener.cpp
-
-	./hardware/akm/AK8975_FS/libsensors/SensorBase.cpp
-	./hardware/akm/AK8975_FS/libsensors/SensorBase.h
-
-	./hardware/invensense/65xx/libsensors_iio/SensorBase.cpp
-	./hardware/invensense/65xx/libsensors_iio/SensorBase.h
-	./hardware/invensense/60xx/libsensors_iio/SensorBase.cpp
-	./hardware/invensense/60xx/libsensors_iio/SensorBase.h
-	./hardware/invensense/60xx/libsensors/SensorBase.cpp
-	./hardware/invensense/60xx/libsensors/SensorBase.h
-
-	./device/samsung/manta/libsensors/SensorBase.cpp
-	./device/samsung/manta/libsensors/SensorBase.h
-
-	./device/generic/goldfish/camera/fake-pipeline2/Sensor.h
-	./device/generic/goldfish/camera/fake-pipeline2/Sensor.cpp
-
-	./device/softwinner/fiber-common/hardware/libhardware/libsensors/SensorBase.cpp
-	./device/softwinner/fiber-common/hardware/libhardware/libsensors/SensorBase.h
-
+createSensorEventConnection()方法，该在服务端被实现，在客户端被调用，并返回一个SensorEventConnection的实例，创建连接，客户端拿到SensorEventConnection实例之后，可以对sensor进行通信操作，仅仅作为通信的接口而已，它并没有用来传送Sensor数据，因为Sensor数据量比较打，IBind实现比较困难。真正实现Sensor数据传送的是管道，在创建SensorEventConnection实例中，创建了BitTube对象，里面创建了管道，用于客户端与服务端的通信
 
 
 
 
 ## 附一 参考资料			
-
-Sensor Framework原理
-http://blog.csdn.net/lizzywu/article/details/10226099
-注意，可以详细了解相关链接文章
-	深入浅出 - Android系统移植与平台开发（十四） - Sensor HAL框架分析之四
-
-
-android sensor framework
-http://blog.csdn.net/tommy_wxie/article/details/13773597
-
-
-
-
-1	Android Sensor框架HAL层解读		
-	http://www.cnblogs.com/lcw/p/3402816.html		
-2	Android感应检测Sensor(简单介绍)		
-	http://blog.csdn.net/huangbiao86/article/details/6745933	
-3	Android Sensor传感器系统架构初探			
-	http://blog.csdn.net/qianjin0703/article/details/5942579		
-4	A​n​d​r​o​i​d​ ​S​e​n​s​o​r​s​分​析		
-	http://wenku.baidu.com/view/c54ed6e09b89680203d825db.html		
-5	android sensor framework			
-	http://blog.csdn.net/tommy_wxie/article/details/13773597		
-
-
-
-
-
+1	Sensor Framework原理			
+	http://blog.csdn.net/lizzywu/article/details/10226099		
+	注意，可以详细了解相关链接文章		
+	深入浅出 - Android系统移植与平台开发（十四） - Sensor HAL框架分析之四			
+2	android sensor framework			
+	http://blog.csdn.net/tommy_wxie/article/details/13773597			
 
