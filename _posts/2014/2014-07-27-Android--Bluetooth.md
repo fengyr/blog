@@ -38,19 +38,20 @@ tags:
 android4.2 基本框架
 
 
-   -----------------------                                      HAL
-   |       Apps          |                     hardware/libhardware/include/hardware/
-   |                     |       ----------------------------	------------------------------------
-   | android.bluetooth   |   --- | Bluetooth HAL Interfaces |	| Bluetooth Profile HAL Interfaces |---
-   -----------------------   |   ----------------------------   ------------------------------------  |
-            |                |                                                                        |
-          Binder            JNI  ----------------------------   ------------------------------------  |
-            |                |   |    Vendor Extersions     |   |        Bluetooth Stack           |  |
-   -----------------------   |   |--------------------------|   |-----------------------------------  |
-   | Blueooth Servicce   |   |   | Custom Configurations    |   |      Bluetooth App Layer         |  |
-   |                     |----   |                          |---|                                  |---
-   | Bluetooth Profiles  |       | Custom Extersions        |   |     Bluetooth Embedded System    |
-   -----------------------       ----------------------------   ------------------------------------
+		-----------------------                                      HAL
+		|       Apps          |                     hardware/libhardware/include/hardware/
+		|                     |       ----------------------------	------------------------------------
+		| android.bluetooth   |   --- | Bluetooth HAL Interfaces |	| Bluetooth Profile HAL Interfaces  |---
+		-----------------------   |   ----------------------------   ------------------------------------  |
+				|                 |                                                                        |
+			  Binder             JNI  ----------------------------   ------------------------------------  |
+				|                 |   |    Vendor Extersions     |   |        Bluetooth Stack           |  |
+		-----------------------   |   |--------------------------|   |-----------------------------------  |
+		| Blueooth Servicce   |   |   | Custom Configurations    |   |      Bluetooth App Layer         |  |
+		|                     |----   |                          |---|                                  |---
+		| Bluetooth Profiles  |       | Custom Extersions        |   |     Bluetooth Embedded System    |
+		-----------------------       ----------------------------   ------------------------------------
+
 
 
 android提供BlueDroid作为默认的协议栈，BlueDroid分为两个部分：		
