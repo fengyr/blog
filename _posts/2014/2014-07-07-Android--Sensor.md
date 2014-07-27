@@ -237,3 +237,8 @@ createSensorEventConnection()方法，该在服务端被实现，在客户端被
 2	android sensor framework			
 	http://blog.csdn.net/tommy_wxie/article/details/13773597			
 
+3	Android如何实现振动器的移植与开发		
+	http://www.androidcn.com/news/20110424/00001586.html		
+4	梳理一下传感器的数据流和框架是怎么样让屏幕旋转的。		
+	http://blog.csdn.net/a345017062/article/details/6592527		
+
