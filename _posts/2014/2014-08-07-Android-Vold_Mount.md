@@ -946,6 +946,410 @@ mDiskNumParts 不为0，将Volume的状态设置为State_Pending并向FrameWork�
 
 
 
+## FrameWork层处理收到的vold消息
+vold模块收到内核消息后，通过前面建立的socket通信各上去发送相应的消息，我们可以看到主要发了两类消息：			
+1、DirectVolume::handleDiskAdded以及handlePartitionAdded都调用setState发送了一条
+	VolumeStateChange消息。		
+2、handleDiskAdded中还发送了 VolumeDiskInserted消息。		
+我们先看下FrameWork层的消息处理流程：		
+
+
+	NativeDaemonConnection
+	MountService
+
+
+这里的消息处理还算比较简单，主要只要处理VolumeDiskInserted消息，另外两条消息收到后都被忽略了，
+我们看下VolumeDiskInserted的处理，首先阻塞在listenToSocket等待vold消息的到来：
+
+
+	while (true) {  
+		int count = inputStream.read(buffer, start, BUFFER_SIZE - start);  
+		if (count < 0) break;  
+
+		try {  
+			if (!mCallbacks.onEvent(code, event, tokens)) {  
+				Slog.w(TAG, String.format(  
+					"Unhandled event (%s)", event));  
+			}
+		}
+
+收到消息后，调用onEvent函数
+onEvent的函数实现在MountService中
+
+
+	public boolean onEvent(int code, String raw, String[] cooked) {  
+		Intent in = null;  
+
+		if (code == VoldResponseCode.VolumeDiskInserted) {  
+			new Thread() {
+				public void run() {  
+					try {  
+						int rc;  
+						if((rc = doMountVolume(path))!=StorageResultCode.OperationSucceeded) {
+							Slog.w(TAG, String.format("Insertion mount failed (%d)", rc));  
+						}  
+					} catch (Exception ex) {  
+						Slog.w(TAG, "Failed to mount media on insertion", ex);  
+					}  
+				}  
+			}.start();
+
+	这里的消息为VolumeDiskInserted，new 一个Thread并start，
+	在run函数中调用doMountVolume函数向vold层发送挂载命令：  
+
+	private int doMountVolume(String path) {  
+		int rc = StorageResultCode.OperationSucceeded;  
+  
+		if (DEBUG_EVENTS) Slog.i(TAG, "doMountVolume: Mouting " + path);  
+		try {  
+			mConnector.doCommand(String.format("volume mount %s", path));  
+		}
+	}
+
+	这里调用doCommand并以volume mount path为参数，我们看下doCommand：
+
+	public synchronized ArrayList<String> doCommand(String cmd)  
+		throws NativeDaemonConnectorException  {  
+		sendCommand(cmd);  
+
+	}
+
+	继续看sendCommand：  
+
+	private void sendCommand(String command, String argument)  
+		throws NativeDaemonConnectorException  {  
+
+		try {  
+			mOutputStream.write(builder.toString().getBytes());  
+		} catch (IOException ex) {  
+			Slog.e(TAG, "IOException in sendCommand", ex);  
+		}
+
+	}
+
+	调用write函数把消息发送到vold层，这样FrameWork层就把挂载命令下发到了vold层
+
+
+
+
+## vold处理FrameWork层发出的消息
+
+Framework层收到消息后，又向vold发送了volume mount的消息，所以vold层又继续着处理这个消息,先看下大概处理流程：
+
+
+	SocketListener
+	FrameworkListener
+	CommandListener
+	Volume
+	Fat
+
+
+同FrameWork层阻塞在等待vold的消息一样，vold层也在等待着收到 FrameWork层的消息，
+不过是调用select函数百阻塞，因为这个还有内核可能会有其它的连接请求的到来等，所以不能阻塞。
+
+
+	void SocketListener::runListener() {  
+
+	    if ((rc = select(max + 1, &read_fds, NULL, NULL, NULL)) < 0) {  
+			SLOGE("select failed (%s)", strerror(errno));  
+            sleep(1);  
+            continue;  
+        }   
+
+        if (FD_ISSET(fd, &read_fds)) {  
+			pthread_mutex_unlock(&mClientsLock);  
+			if (!onDataAvailable(*it)) {  
+				close(fd);  
+				pthread_mutex_lock(&mClientsLock);  
+				delete *it;  
+				it = mClients->erase(it);  
+				pthread_mutex_unlock(&mClientsLock);  
+			}  
+			FD_CLR(fd, &read_fds);  
+			pthread_mutex_lock(&mClientsLock);  
+			continue;  
+		}  
+	}  
+
+
+收到消息后，调用onDataAvailable，这里这个函数的实现是在FrameworkListener类中，
+在onDataAvailable中接收数据，并调用dispatchCommand对分发命令：
+
+
+	void FrameworkListener::dispatchCommand(SocketClient *cli, char *data) {  
+		.  
+		.  
+		for (i = mCommands->begin(); i != mCommands->end(); ++i) {  
+		    FrameworkCommand *c = *i;  
+	  
+		    if (!strcmp(argv[0], c->getCommand())) {  
+		        if (c->runCommand(cli, argc, argv)) {  
+		            SLOGW("Handler '%s' error (%s)", c->getCommand(), strerror(errno));  
+		        }  
+		        goto out;  
+		    }  
+		}  
+	}  
+
+mCommands中的命令是在什么时候加进去的？回顾下CommandListener的初始化，我们注册了很多的命令，
+对的，就是在注册这些命令的时候加进去的，这里传下来的命令是volume mount ,所以调用 VolumeCmd::runCommand
+
+
+	int CommandListener::VolumeCmd::runCommand(SocketClient *cli,  
+		int argc, char **argv) {  
+		.  
+		.  
+		else if (!strcmp(argv[1], "mount")) {  
+			if (argc != 3) {  
+				cli->sendMsg(ResponseCode::CommandSyntaxError, 
+					"Usage: volume mount <path>", false);  
+		        return 0;  
+			}  
+			rc = vm->mountVolume(argv[2]);  
+	} 
+
+针对mount命令，调用mountVolume，mountVolume中继续调用mountVol：
+
+	int Volume::mountVol() {  
+		dev_t deviceNodes[4];  
+		int n, i, rc = 0;  
+		char errmsg[255];  
+	  
+		if (getState() == Volume::State_NoMedia) {  
+		    snprintf(errmsg, sizeof(errmsg),  
+		             "Volume %s %s mount failed - no media",  
+		             getLabel(), getMountpoint());  
+		    mVm->getBroadcaster()->sendBroadcast(  
+					ResponseCode::VolumeMountFailedNoMedia,  
+		            errmsg, false);  
+		    errno = ENODEV;  
+		    return -1;  
+		} else if (getState() != Volume::State_Idle) {  
+		    errno = EBUSY;  
+		    return -1;  
+		}  
+	  
+		if (isMountpointMounted(getMountpoint())) {  
+		    SLOGW("Volume is idle but appears to be mounted - fixing");  
+		    setState(Volume::State_Mounted);  
+		    // mCurrentlyMountedKdev = XXX  
+		    return 0;  
+		}  
+	  
+		n = getDeviceNodes((dev_t *) &deviceNodes, 4);  
+		if (!n) {  
+		    SLOGE("Failed to get device nodes (%s)\n", strerror(errno));  
+		    return -1;  
+		}  
+	  
+		for (i = 0; i < n; i++) {  
+		    char devicePath[255];  
+		    int result = 0;  
+		    const char *disktype = "fat";  
+	  
+		    sprintf(devicePath, "/dev/block/vold/%d:%d", MAJOR(deviceNodes[i]),  
+		            MINOR(deviceNodes[i]));  
+	  
+		    SLOGI("%s being considered for volume %s\n", devicePath, getLabel());  
+	  
+		    errno = 0;  
+		    setState(Volume::State_Checking);  
+	  
+		    result = Fat::check(devicePath);  
+		    if(result)  
+		    {  
+		        result = Ntfs::check(devicePath);  
+		        if(!result)  
+		        {  
+		             disktype = "ntfs";  
+		        }  
+		    }  
+		           
+		    if (result) {  
+		        if (errno == ENODATA) {  
+		            SLOGW("%s does not contain a FAT(Ntfs) filesystem\n", devicePath);  
+		            continue;  
+		        }  
+		        errno = EIO;  
+		        /* Badness - abort the mount */  
+		        SLOGE("%s failed FS checks (%s)", devicePath, strerror(errno));  
+		        setState(Volume::State_Idle);  
+		        return -1;  
+		    }  
+	  
+		    /* 
+		     * Mount the device on our internal staging mountpoint so we can 
+		     * muck with it before exposing it to non priviledged users. 
+		     */  
+		    errno = 0;  
+		    if(0 == strcmp(disktype, "fat"))  
+		    {             
+		        if (Fat::doMount(devicePath, "/mnt/secure/staging", false, 
+					false,false, 1000, 1015, 0702, true)) {  
+		            SLOGE("%s failed to mount via VFAT (%s)\n", devicePath, strerror(errno));  
+		            continue;  
+		        }  
+		    }  
+		    else if(0 == strcmp(disktype, "ntfs"))  
+		    {  
+		        if (Ntfs::doMount(devicePath, "/mnt/secure/staging", false, 
+					false,false, 1000, 1015, 0702, true)) {  
+		            SLOGE("%s failed to mount via NTFS (%s)\n", devicePath, strerror(errno));  
+		            continue;  
+		        }  
+		    }  
+	  
+		    SLOGI("Device %s, target %s mounted @ /mnt/secure/staging", devicePath, 
+				getMountpoint());  
+	  
+		    protectFromAutorunStupidity();  
+	  
+		    if (createBindMounts()) {  
+		        SLOGE("Failed to create bindmounts (%s)", strerror(errno));  
+		        umount("/mnt/secure/staging");  
+		        setState(Volume::State_Idle);  
+		        return -1;  
+		    }  
+	  
+		    /* 
+		     * Now that the bindmount trickery is done, atomically move the 
+		     * whole subtree to expose it to non priviledged users. 
+		     */  
+		    if (doMoveMount("/mnt/secure/staging", getMountpoint(), false)) {  
+		        SLOGE("Failed to move mount (%s)", strerror(errno));  
+		        umount("/mnt/secure/staging");  
+		        setState(Volume::State_Idle);  
+		        return -1;  
+		    }  
+		    setState(Volume::State_Mounted);  
+		    mCurrentlyMountedKdev = deviceNodes[i];  
+		    return 0;  
+		}  
+	  
+		SLOGE("Volume %s found no suitable devices for mounting :(\n", getLabel());  
+		setState(Volume::State_Idle);  
+	  
+		return -1;  
+	}  
+
+
+mountVol中首先检票Volume的状态，这里面必须为State_Idle状态才会进行后面的操作，
+
+这里有一点需要注意下，我们知道，在DirectVolume::handleDiskAdded的时候 向FrameWork层发送VolumeDiskInserted消息，这个时候 FrameWork层才下发volume mount消息，但是这个时候Voleme的State为State_Pending,要等到内核将这块设备的所有分区的add消息发出并调用完handlePartitionAdded才将Volume的状态设为State_Idle，这里会不会发生这种情况：FrameWork消息已经发下来了要进行mount了，但add分区的消息还没处理完，这个时候Volume的状态仍为State_Pending，所以在这里mountVol检查状态的时候不正确，直接返回失败，
+因为在我们的项目中发现有的时候存储设备会挂载不上，所以这里加了一个延时处理，状态不对时，睡眠一会再处理。状态检查之后调用getDeviceNodes获取有多少分区，然后对所有分区一一进行挂载，
+
+注意挂载的时候是先挂载到/mnt/secure/staging，然后现调用doMoveMount移动到挂载点。
+
+
+
+## FrameWork层处理vold消息
+
+
+从前面的知识我们看到，在vold层收到 FrameWork层的消息后，会进行相应的处理，同时在处理的过程中会上报相应的状态给FrameWork层，在这个过程中主要上报了两种消息：
+1、开始挂载前上报State_Checking消息。
+2、挂载成功后上报State_Mounted消息。
+针对这两个消息，我们看下FrameWork层相应的处理，这两个消息处理的流程基本差不多，只是对于State_Mounted在处理的时候多了一个updateExternalMediaStatus通知PackageManagerService进行相应的更新
+
+	MountServicec
+
+首先还是阻塞在NativeDaemonConnector中的listenToSocket等待vold层消息的到来，收到消息后，调用onEvent函数进行处理，这里收到的这两个消息类型都是VolumeStateChange，所以调用notifyVolumeStateChange函数
+
+
+对Checking和Mount两类消息都是调用updatePublicVolumeState进行处理
+
+针对Mount消息会调用updateExternalMediaStatus去更新PackageManagerService中的一些信息
+
+
+调用onStorageStateChanged通知SDCARD状态改变，这个listener是哪里来的呢，我们跟踪源码可以看到是MountServiceBinderListener的一个成员变量，其类型是IMountServiceListener，IMountServiceListener是一个接口，我们跟踪其实现，最后可以看到是在StorageManager的MountServiceBinderListener的这个类继承了IMountServiceListener这个接口，而且我们看StorageManager的构造函数：
+
+
+	public StorageManager(Looper tgtLooper) throws RemoteException {  
+		mMountService = IMountService.Stub.asInterface(ServiceManager.getService("mount"));  
+		if (mMountService == null) {  
+		    Log.e(TAG, "Unable to connect to mount service! - is it running yet?");  
+		    return;  
+		}  
+		mTgtLooper = tgtLooper;  
+		mBinderListener = new MountServiceBinderListener();  
+		mMountService.registerListener(mBinderListener);  
+	}  
+
+
+对的，就是在它的构造函数中实例化了一个listener并注册到MountService中，回到上面，调用了listener的onStorageStateChanged，这里通过binder最终调用了StorageManager类中MountServiceBinderListener的onStorageStateChanged：
+
+
+	public void onStorageStateChanged(String path, String oldState, String newState) {  
+		final int size = mListeners.size();  
+		for (int i = 0; i < size; i++) {  
+		    mListeners.get(i).sendStorageStateChanged(path, oldState, newState);  
+		}  
+	}  
+
+这里的mListeners是一个List,其中的成员是ListenerDelegate类，所以这里调用了ListenerDelegate的sendStorageStateChanged方法
+
+
+	void sendStorageStateChanged(String path, String oldState, String newState) {  
+		StorageStateChangedStorageEvent e = 
+			new StorageStateChangedStorageEvent(path, oldState, newState);  
+		mHandler.sendMessage(e.getMessage());  
+	}  
+
+这里只是简单的发一条StorageStateChangedStorageEvent 消息，我们看看下这个Handle 的处理函数，在ListenerDelegate类中重写了handleMessage方法：
+
+
+	public void handleMessage(Message msg) {  
+		StorageEvent e = (StorageEvent) msg.obj;  
+	  
+		if (msg.what == StorageEvent.EVENT_UMS_CONNECTION_CHANGED) {  
+			UmsConnectionChangedStorageEvent ev = (UmsConnectionChangedStorageEvent) e;  
+			mStorageEventListener.onUsbMassStorageConnectionChanged(ev.available);  
+		} else if (msg.what == StorageEvent.EVENT_STORAGE_STATE_CHANGED) {  
+			StorageStateChangedStorageEvent ev = (StorageStateChangedStorageEvent) e;  
+			mStorageEventListener.onStorageStateChanged(ev.path, ev.oldState, ev.newState);  
+		} else {  
+			Log.e(TAG, "Unsupported event " + msg.what);  
+		}  
+	}  
+	
+这里调用mStorageEventListener的onStorageStateChanged，这里mStorageEventListener是StorageEventListener类型的。
+一般应用需要在sd卡状态改变的时候做一些处理也就只要继承StorageEventListener并重写mStorageEventListener这个方法，然后把这个Listener  调用StorageManager 的registerListener注册进来，这样在sdcard状态变化的时候就能收到消息了，进行处理了。
+好了，对于vold的发的这两个消息的处理就差不多了 State_Checking和State_Mounted处理的流程基本都是一样的，只是对于State_Mounted消息还多了一个和PackageManageService打交道的过程，我们最后来看下这个交互过程都做了什么：
+
+
+	public void updateExternalMediaStatus(final boolean mediaStatus, final 
+		boolean reportStatus) {  
+		if (Binder.getCallingUid() != Process.SYSTEM_UID) {  
+		    throw new SecurityException("Media status can only be updated by the system");  
+		}  
+		synchronized (mPackages) {  
+		    Log.i(TAG, "Updating external media status from " +  
+		            (mMediaMounted ? "mounted" : "unmounted") + " to " +  
+		            (mediaStatus ? "mounted" : "unmounted"));  
+		    if (DEBUG_SD_INSTALL) Log.i(TAG, "updateExternalMediaStatus:: mediaStatus=" +  
+		            mediaStatus+", mMediaMounted=" + mMediaMounted);  
+		    if (mediaStatus == mMediaMounted) {  
+		        Message msg = mHandler.obtainMessage(UPDATED_MEDIA_STATUS,  
+		                reportStatus ? 1 : 0, -1);  
+		        mHandler.sendMessage(msg);  
+		        return;  
+		    }  
+		    mMediaMounted = mediaStatus;  
+		}  
+		// Queue up an async operation since the package installation may take a little while.  
+		mHandler.post(new Runnable() {  
+		    public void run() {  
+		        mHandler.removeCallbacks(this);  
+		        updateExternalMediaStatusInner(mediaStatus, reportStatus);  
+		    }  
+		});  
+	}  
+
+这里主要是调用updateExternalMediaStatusInner，这里面又主要调用loadMediaPackages函数，我们看下这个函数：
+这里面主要是调用scanPackageLI对sd卡里面的东西进行处理。
+
+
+
+
 
 
 
