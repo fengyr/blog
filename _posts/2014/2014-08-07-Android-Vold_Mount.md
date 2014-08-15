@@ -532,7 +532,7 @@ NativeDaemonConnector实现了Runnable接口。接下来调用 thread.start()启
 		        for (int i = 0; i < count; i++) {
 		            if (buffer[i] == 0) {
 		                String event = new String(buffer, start, i - start);
-		                if (LOCAL_LOGD) Slog.d(TAG, String.format("RCV <- {%s}", event));
+		                if (LOCAL_LOGD) Slog.d(TAG, String.format("RCV <- (%s)", event));
 	  
 		                String[] tokens = event.split(" ");
 		                try {
