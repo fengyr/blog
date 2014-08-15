@@ -10,6 +10,8 @@ tags:
 
 android 4.4.2
 
+![Alt text](http://zhongguomin.github.io/blog/media/images/2014/Android-Vold_Mount-01.jpg "Android-Vold_Mount-01.jpg")
+
 
 ## Vold 启动
 
@@ -1404,7 +1406,8 @@ mountVol中首先检票Volume的状态，这里面必须为State_Idle状态才�
 	http://blog.csdn.net/new_abc/article/details/7417539		
 7	android usb挂载分析--类图		
 	http://blog.csdn.net/new_abc/article/details/7420755		
-
+8	Android Vold架构		
+	http://blog.csdn.net/qianjin0703/article/details/6362389		
 
 
 
