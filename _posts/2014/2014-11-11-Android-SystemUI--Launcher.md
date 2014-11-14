@@ -55,12 +55,12 @@ Android 4.4.2
 
 	SystemBars
 		onNoService()
-		createStatusBarFromConfig
-			final String clsName = mContext.getString(R.string.config_statusBarComponent);
-				// com.android.systemui.statusbar.phone.PhoneStatusBar
-			cls = mContext.getClassLoader().loadClass(clsName);
-			mStatusBar = (BaseStatusBar) cls.newInstance();
-			mStatusBar.start();
+			createStatusBarFromConfig
+				final String clsName = mContext.getString(R.string.config_statusBarComponent);
+					// com.android.systemui.statusbar.phone.PhoneStatusBar
+				cls = mContext.getClassLoader().loadClass(clsName);
+				mStatusBar = (BaseStatusBar) cls.newInstance();
+				mStatusBar.start();
 
 	PhoneStatusBar start()
 		super.start(); // calls createAndAddWindows()
@@ -70,28 +70,73 @@ Android 4.4.2
 
 
 
-Status Bar 显示，状态更新，事情通知
+Status Bar 显示
 
 	super.start(); // calls createAndAddWindows()
+		BaseStatusBar start()
+	PhoneStatusBar createAndAddWindows
+		addStatusBarWindow
 		makeStatusBarView
-			mStatusBarWindow = (StatusBarWindowView) View.inflate(context,
-				R.layout.super_status_bar, null); 
+				mStatusBarWindow = (StatusBarWindowView) View.inflate(context, 
+					R.layout.super_status_bar, null); 
+				mStatusBarWindow.setOnTouchListener(new View.OnTouchListener() { 
 
 			mStatusBarView = (PhoneStatusBarView) mStatusBarWindow.findViewById(R.id.status_bar);
+			mStatusBarView.setBar(this);
 
+			mNotificationPanel = 
+				(NotificationPanelView) mStatusBarWindow.findViewById(R.id.notification_panel);
+			mNotificationPanel.setStatusBar(this);
 
-
+			mNavigationBarView = 
+				(NavigationBarView) View.inflate(context, R.layout.navigation_bar, null); 
+			mNavigationBarView.setOnTouchListener(new View.OnTouchListener() { 
 
 		mWindowManager.addView(mStatusBarWindow, lp);
 
+
+Status Bar 电池状态信息更新
+
+	makeStatusBarView
+		mBatteryController = new BatteryController(mContext);
+		mBatteryController.addLabelView((TextView)mStatusBarView.findViewById(R.id.battery_text));
+
+	BatteryController extends BroadcastReceiver
+		onReceive
+			if (action.equals(Intent.ACTION_BATTERY_CHANGED)) { 
+				final int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0); 
+				int N = mLabelViews.size();
+				for (int i=0; i<N; i++) { 
+					TextView v = mLabelViews.get(i); 
+					v.setText( ...
+
+------- 电池图标的更新，花了很多时间没有找到
+	BatteryMeterView
+
+
+Status bar 时间信息更新
+
+	Clock
+		public void onReceive(Context context, Intent intent) { 
+			if (action.equals(Intent.ACTION_TIMEZONE_CHANGED)) {  
+			
+			updateClock
+			getSmallTime
+
+
+
+Status Bar 事件通知
+	比如：插拔SD卡，USB线，程序安装
 
 
 
 
 Navigation Bar 显示，按键处理
 
-	addNavigationBar
-
+	PhoneStatusBar start()
+		addNavigationBar
+			mWindowManager.addView(mNavigationBarView, getNavigationBarLayoutParams());
+				// mNavigationBarView init at makeStatusBarView
 
 
 
