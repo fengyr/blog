@@ -12,15 +12,17 @@ tags:
 
 技术 < 1 >
 
-	《深入理解Android 卷II》			邓凡平	著															机械工业出版社
+	《深入理解Android 卷II》			邓凡平	著												机械工业出版社
+	《敏捷教练》						Rachel Davies, Liz Sedley 著  徐毅，袁店明 译			清华大学出版社
 	
 
 科学，文化 < 0 >
 
 
-管理 < 1 >
+管理 < 2 >
 
-	《从优秀到卓越》					［美］吉姆 - 柯林斯 著						俞利军 译				中信出版社
+	《从优秀到卓越》					［美］吉姆 - 柯林斯 著  俞利军 译						中信出版社
+	《重来》							Jason Fried, David Heinemeier Hansson 著  李瑜偲 译		中信出版社
 
 
 
@@ -28,13 +30,13 @@ tags:
 
 技术 < 2 >
 
-	《Scrum要素》						Chris Sims, Hillary Louise Johnson 著		徐毅 译					人民邮电出版社
-	《深入理解Android 卷I》				邓凡平	著															机械工业出版社
+	《Scrum要素》						Chris Sims, Hillary Louise Johnson 著  徐毅 译			人民邮电出版社
+	《深入理解Android 卷I》				邓凡平	著												机械工业出版社
 
 
 科学，文化 < 1 >
 
-	《失控》							Kevin kelly（凯文－凯利） 著				东西文库 译				新星出版社
+	《失控》							Kevin kelly（凯文－凯利） 著  东西文库 译				新星出版社
 
 
 管理 < 0 >
