@@ -45,8 +45,9 @@ tags:
 管理 < 0 >
 
 
-值a             | 描述                                       | test
+NO              | 书名                                       | 作者，译者
 :---------------|:-------------------------------------------|:-------------------
+----------------|--------------------------------------------|-------------------
 baseline        | 默认元素放置在父元素的基线上               | aaaa
 sub             | 垂直对齐文本的下标                         | bbb
 super           | 垂直对齐文本的上标                         | ccc
@@ -54,31 +55,5 @@ top             | 把元素的顶端与行中最高元素的顶端对齐       |
 text-top        | 把元素的顶端与父元素字体的顶端对齐         | ee
 middle          | 把此元素放置在父元素的中部                 | ff
 bottom          | 把元素的顶端与行中最低的元素的顶端对齐     | gg
-
-
-<table class="table table-bordered table-striped table-condensed">
-<tbody>
-	<tr>
-		<td><em>Year</em></td>
-		<td><em>Temperature (low)</em></td>
-		<td><em>Temperature (high)</em></td>
-	</tr>
-
-	<tr>
-		<td>1900</td>
-		<td>-10</td>
-		<td>25</td>
-	</tr>
-	<tr>
-		<td>1910</td>
-		<td>-15</td>
-		<td>30</td></tr>
-	<tr>
-		<td>1920</td>
-		<td>-10</td>
-		<td>32</td>
-	</tr>
-</tbody>
-</table>
 
 
