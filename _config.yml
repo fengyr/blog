@@ -1,4 +1,6 @@
-markdown: rdiscount
+markdown: redcarpet
+redcarpet:
+    extensions: ["tables"]
 permalink: /:year/:month/:title/
 url: http://zhongguomin.github.io/blog
 author: 钟国敏
