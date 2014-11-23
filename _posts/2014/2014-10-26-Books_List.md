@@ -60,3 +60,13 @@ length|相对基准线的偏移
 inherit|规定应该从父元素继承 vertical-align 属性的值*（所有的IE都不支持？！）*
 
 
+<table>
+<tbody>
+<tr><td><em>Year</em></td><td><em>Temperature (low)</em></td><td><em>Temperature (high)</em></td></tr>
+<tr><td>1900</td><td>-10</td><td>25</td></tr>
+<tr><td>1910</td><td>-15</td><td>30</td></tr>
+<tr><td>1920</td><td>-10</td><td>32</td></tr>
+</tbody>
+</table>
+
+
