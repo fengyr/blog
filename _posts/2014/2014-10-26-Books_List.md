@@ -45,7 +45,7 @@ tags:
 管理 < 0 >
 
 
-<table>
+<table class="table table-bordered table-striped table-condensed">
    <tr>
       <td>John</td>
       <td>Smith</td>
