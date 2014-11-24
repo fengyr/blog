@@ -3,21 +3,17 @@ Peter's Blog
 1   categories & tags
 ---------------------------------------------
     programmer
-        android
-        c
-        java
-        linux
-        tools
-        shell
-        git
-		basic
-		datastructures_algorithm
-		smart_home
+        android				android相关
+        linux				linux相关
+        tools				开发工具，语言
+		basic				软件开发基本功
+		design				设计，架构相关
+		smart_home			智能家居专项
 
     thinker
-        life
-		work
-		others
+        life				生活感悟
+		work				工作，管理相关
+		others				其他
 
 ---------------------------------------------
 
