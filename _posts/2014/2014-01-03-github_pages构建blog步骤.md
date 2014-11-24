@@ -4,7 +4,7 @@ title: github pages构建blog步骤
 categories:
 - programmer
 tags:
-- git
+- tools
 ---
 
 
